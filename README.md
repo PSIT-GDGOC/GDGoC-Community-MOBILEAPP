@@ -280,7 +280,6 @@ GitHub shows `.html` files as source code, so clicking the file in the repo will
 
 | Option | How |
 |---|---|
-| **Live preview (recommended)** | [Open the hosted mockups (replace ORG and REPO)](https://ORG.github.io/REPO/design/gdgoc-chapter-app-mockups.html). _Maintainers: enable GitHub Pages (Settings → Pages → deploy from `main`) so this link works._ |
 | **Quick preview** | Paste the raw file URL into [htmlpreview.github.io](https://htmlpreview.github.io/) |
 | **Local** | Clone the repo and double-click `design/gdgoc-chapter-app-mockups.html`, or run `open design/gdgoc-chapter-app-mockups.html` (macOS) / `start design\gdgoc-chapter-app-mockups.html` (Windows) |
 
