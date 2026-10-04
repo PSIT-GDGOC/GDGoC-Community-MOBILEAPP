@@ -11,39 +11,43 @@ Learn. Build. Ship. Earn your place on the Board.
 ![Material 3](https://img.shields.io/badge/design-Material%203-4285F4?style=for-the-badge)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-EA4335?style=for-the-badge)
 
-[Design Mockups](#-design-mockups) · [Screen Catalog](#-screen-catalog) · [Good First Issues](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) · [Report a Bug](../../issues) · [Web Platform](#)
+[Design Mockups](#design-mockups) · [Screen Catalog](#screen-catalog) · [Good First Issues](../../issues?q=is%3Aissue+is%3Aopen+label%3A%22good+first+issue%22) · [Report a Bug](../../issues) · [Web Platform](#)
 
 </div>
 
 ---
 
+<a id="table-of-contents"></a>
+
 ## 📑 Table of Contents
 
-1. [Open Source October](#-open-source-october)
-2. [TL;DR for Contributors](#-tldr-for-contributors)
-3. [About the App](#-about-the-app)
-4. [Roles](#-roles)
-5. [App Flow](#️-app-flow)
-6. [Screen Catalog](#-screen-catalog)
-7. [Feature Details](#-feature-details)
-8. [Business Rules](#-business-rules)
-9. [Design Mockups](#-design-mockups)
-10. [Design System](#-design-system)
-11. [Tech Stack](#-tech-stack)
-12. [Architecture & Project Structure](#-architecture--project-structure)
-13. [Navigation](#-navigation)
-14. [Data Models](#-data-models)
-15. [API Contract](#-api-contract-proposed)
-16. [Getting Started](#️-getting-started)
-17. [How to Contribute](#-how-to-contribute)
-18. [Coding Standards](#-coding-standards)
-19. [Testing](#-testing)
-20. [What to Build](#️-what-to-build)
-21. [Known Gaps & Open Questions](#-known-gaps--open-questions)
-22. [FAQ & Troubleshooting](#-faq--troubleshooting)
-23. [License](#-license)
+1. [Open Source October](#open-source-october)
+2. [TL;DR for Contributors](#tldr-for-contributors)
+3. [About the App](#about-the-app)
+4. [Roles](#roles)
+5. [App Flow](#app-flow)
+6. [Screen Catalog](#screen-catalog)
+7. [Feature Details](#feature-details)
+8. [Business Rules](#business-rules)
+9. [Design Mockups](#design-mockups)
+10. [Design System](#design-system)
+11. [Tech Stack](#tech-stack)
+12. [Architecture & Project Structure](#architecture-project-structure)
+13. [Navigation](#navigation)
+14. [Data Models](#data-models)
+15. [API Contract](#api-contract-proposed)
+16. [Getting Started](#getting-started)
+17. [How to Contribute](#how-to-contribute)
+18. [Coding Standards](#coding-standards)
+19. [Testing](#testing)
+20. [What to Build](#what-to-build)
+21. [Known Gaps & Open Questions](#known-gaps-open-questions)
+22. [FAQ & Troubleshooting](#faq-troubleshooting)
+23. [License](#license)
 
 ---
+
+<a id="open-source-october"></a>
 
 ## 🎃 Open Source October
 
@@ -65,16 +69,20 @@ Every screen in this README already has a finished design. Pick a screen, build 
 
 ---
 
+<a id="tldr-for-contributors"></a>
+
 ## ⚡ TL;DR for Contributors
 
 1. Open [Issues](../../issues) and pick one labelled **`good first issue`** (or any `help wanted`).
 2. Comment **"I'd like to work on this"** and wait until a maintainer **assigns** you.
 3. Fork → clone → `git checkout -b feat/<short-name>`.
-4. Open the [design mockup](#-design-mockups) and build the screen to match it, including its states.
+4. Open the [design mockup](#design-mockups) and build the screen to match it, including its states.
 5. Run `flutter analyze` and `flutter test` and make sure both pass.
 6. Open a PR to `main`, link the issue (`Closes #123`) and attach **screenshots or a screen recording**.
 
 ---
+
+<a id="about-the-app"></a>
 
 ## 📖 About the App
 
@@ -85,6 +93,8 @@ It is the mobile companion to the GDGoC PSIT web platform and uses the same back
 **Status:** designs complete (22 screens) · implementation starting · backend shared with the web platform.
 
 ---
+
+<a id="roles"></a>
 
 ## 👥 Roles
 
@@ -99,6 +109,8 @@ The app routes every user to the right experience after sign-in.
 A user has exactly one role, returned by the API after verification.
 
 ---
+
+<a id="app-flow"></a>
 
 ## 🗺️ App Flow
 
@@ -122,6 +134,8 @@ flowchart TD
 ```
 
 ---
+
+<a id="screen-catalog"></a>
 
 ## 🧭 Screen Catalog
 
@@ -156,6 +170,8 @@ flowchart TD
 > Routes are proposals to keep naming consistent. If you think one should change, raise it in the issue before building.
 
 ---
+
+<a id="feature-details"></a>
 
 ## ✨ Feature Details
 
@@ -228,6 +244,8 @@ Designers and contributors: please propose the screen in the issue before buildi
 
 ---
 
+<a id="business-rules"></a>
+
 ## 📐 Business Rules
 
 Rules inferred from the mockups. If the backend says otherwise, the backend wins; raise it in the issue.
@@ -250,9 +268,25 @@ Rules inferred from the mockups. If the backend says otherwise, the backend wins
 
 ---
 
+<a id="design-mockups"></a>
+
 ## 🖼️ Design Mockups
 
-All 22 screens are designed. The interactive file is at [`design/gdgoc-chapter-app-mockups.html`](design/gdgoc-chapter-app-mockups.html). Open it in a browser:
+All 22 screens are designed in one interactive HTML file: [`design/gdgoc-chapter-app-mockups.html`](design/gdgoc-chapter-app-mockups.html).
+
+### 🔗 How to open the mockups
+
+GitHub shows `.html` files as source code, so clicking the file in the repo will **not** open the design. Use one of these instead:
+
+| Option | How |
+|---|---|
+| **Live preview (recommended)** | [Open the hosted mockups (replace ORG and REPO)](https://ORG.github.io/REPO/design/gdgoc-chapter-app-mockups.html). _Maintainers: enable GitHub Pages (Settings → Pages → deploy from `main`) so this link works._ |
+| **Quick preview** | Paste the raw file URL into [htmlpreview.github.io](https://htmlpreview.github.io/) |
+| **Local** | Clone the repo and double-click `design/gdgoc-chapter-app-mockups.html`, or run `open design/gdgoc-chapter-app-mockups.html` (macOS) / `start design\gdgoc-chapter-app-mockups.html` (Windows) |
+
+The mockups load fonts and icons from Google Fonts, so open them while online.
+
+### 🕹️ Using the mockups
 
 - **Grid view** shows all screens; **Solo view** shows one at a time (arrow keys to move, `R` to replay motion, `Esc` to go back)
 - **State chips** under each screen switch between its states (for example Not registered → Registered → Ticket)
@@ -261,6 +295,8 @@ All 22 screens are designed. The interactive file is at [`design/gdgoc-chapter-a
 > ⚠️ The mockups are marked **draft for lead review, not for production**, and use **synthetic data** (names, roll numbers, points, events). Never hard-code that data in the app; use the API or a clearly marked fake data source.
 
 ---
+
+<a id="design-system"></a>
 
 ## 🎨 Design System
 
@@ -344,6 +380,8 @@ Top app bar · Bottom navigation bar · Assist chip · Filter chip · Button gro
 
 ---
 
+<a id="tech-stack"></a>
+
 ## 🧰 Tech Stack
 
 | Layer | Technology |
@@ -370,6 +408,8 @@ Top app bar · Bottom navigation bar · Assist chip · Filter chip · Button gro
 
 > This is the proposed stack. Suggest changes in an issue **before** starting, and get a maintainer's approval before adding any new package.
 ---
+
+<a id="architecture-project-structure"></a>
 
 ## 🏗️ Architecture & Project Structure
 
@@ -414,6 +454,8 @@ gdgoc-psit-app/
 - Every screen has a widget test and a golden test for each state shown in the mockup
 ---
 
+<a id="navigation"></a>
+
 ## 🧭 Navigation
 
 - `landing` → `verify` → `otp` → `role-router`
@@ -422,6 +464,8 @@ gdgoc-psit-app/
 - Deep links (planned): `gdgocpsit://events/{id}` for event links and shared tickets
 - Signed-in users skip straight to their role's shell on launch (token in secure storage)
 ---
+
+<a id="data-models"></a>
 
 ## 🗃️ Data Models
 
@@ -541,6 +585,8 @@ class TimelineItem with _$TimelineItem {
 ```
 ---
 
+<a id="api-contract-proposed"></a>
+
 ## 🔌 API Contract (proposed)
 
 Base URL comes from `API_BASE_URL`. All requests except auth use `Authorization: Bearer <token>`. These endpoints are a **proposal** to align with the web backend; the backend team will confirm.
@@ -569,6 +615,8 @@ Base URL comes from `API_BASE_URL`. All requests except auth use `Authorization:
 | GET | `/activity` | Recent chapter activity | All |
 
 ---
+
+<a id="getting-started"></a>
 
 ## ⚙️ Getting Started
 
@@ -630,10 +678,12 @@ git merge upstream/main
 ```
 ---
 
+<a id="how-to-contribute"></a>
+
 ## 🤝 How to Contribute
 
 ### Step by step
-1. **Pick an issue** from [Issues](../../issues). Start with `good first issue`, or choose a screen from the [Screen Catalog](#-screen-catalog) and open an issue for it.
+1. **Pick an issue** from [Issues](../../issues). Start with `good first issue`, or choose a screen from the [Screen Catalog](#screen-catalog) and open an issue for it.
 2. **Claim it.** Comment "I'd like to work on this". Wait until a maintainer assigns it. One person per issue, and please don't start unassigned work.
 3. **Fork and clone** the repo, add the upstream remote.
 4. **Create a branch** from an up-to-date `main`.
@@ -700,6 +750,8 @@ Low-quality or spam PRs are labelled `invalid` / `spam`, closed, and **do not co
 
 ---
 
+<a id="coding-standards"></a>
+
 ## 📏 Coding Standards
 
 - **Dart style:** follow [Effective Dart](https://dart.dev/effective-dart); run `dart format .` before every commit
@@ -714,6 +766,8 @@ Low-quality or spam PRs are labelled `invalid` / `spam`, closed, and **do not co
 - **Comments:** explain why, not what
 ---
 
+<a id="testing"></a>
+
 ## 🧪 Testing
 
 | Type | Tools | What to cover |
@@ -723,6 +777,8 @@ Low-quality or spam PRs are labelled `invalid` / `spam`, closed, and **do not co
 | Golden | `flutter_test` goldens | Every state in the mockup, light theme |
 | Integration | `integration_test` | Sign-in flow, register for an event, view ticket |
 ---
+
+<a id="what-to-build"></a>
 
 ## 🛠️ What to Build
 
@@ -770,6 +826,8 @@ Open or ask for an issue for any item below.
 
 ---
 
+<a id="known-gaps-open-questions"></a>
+
 ## ❓ Known Gaps & Open Questions
 
 These need a decision from organisers or designers. Comment on the relevant issue if you can help.
@@ -787,6 +845,8 @@ These need a decision from organisers or designers. Comment on the relevant issu
 11. **iOS:** the designs are Material 3 for Android; decide whether iOS gets adaptive tweaks
 
 ---
+
+<a id="faq-troubleshooting"></a>
 
 ## 🩺 FAQ & Troubleshooting
 
@@ -817,6 +877,8 @@ Small deviations need a reason in the PR description. Spacing, colour and type s
 **I found a design problem.**
 Open an issue with the `design` label and a screenshot.
 ---
+
+<a id="license"></a>
 
 ## 📄 License
 
