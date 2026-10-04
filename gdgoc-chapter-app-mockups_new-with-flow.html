@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GDGoC PSIT: Design Mockups</title>
+<!-- Each family in its own link so one unavailable family cannot break the others -->
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:ROND,wght@100,300..700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200&display=swap">
+<script>try{if(sessionStorage.getItem("gdgoc-intro-played")!=="true")document.documentElement.className="intro-on"}catch(e){document.documentElement.className="intro-on"}</script>
+<style>
+/* ===== TOKENS: every color, size, shape and motion value lives here ===== */
+:root{
+  --canvas:#F8F9FA;--surface:#FFFFFF;--surface-alt:#F1F3F4;--outline:#DADCE0;
+  --on-surface:#202124;--on-surface-2:#5F6368;--on-surface-3:#80868B;
+  --primary:#1A73E8;--primary-press:#1967D2;
+  --brand-blue:#4285F4;--brand-red:#EA4335;--brand-yellow:#FBBC04;--brand-green:#34A853;
+  --tint-blue:#E8F0FE;--tint-red:#FCE8E6;--tint-yellow:#FEF7E0;--tint-green:#E6F4EA;
+  /* on-tint text starts from Google 700-900 steps; measured ratios and any darkening land in pass 2 */
+  --on-tint-blue:#174EA6;--on-tint-green:#137333;--on-tint-red:#B31412;--on-tint-amber:#7A4700;
+  --state-hover:.08;--state-focus:.10;--state-press:.10;--state-drag:.16;
+  --elev-1:0 1px 2px rgba(60,64,67,.30),0 1px 3px 1px rgba(60,64,67,.15);
+  --elev-2:0 1px 2px rgba(60,64,67,.30),0 2px 6px 2px rgba(60,64,67,.15);
+  --elev-3:0 1px 3px rgba(60,64,67,.30),0 4px 8px 3px rgba(60,64,67,.15);
+  --shape-xs:4px;--shape-sm:8px;--shape-md:12px;--shape-lg:16px;--shape-lg-inc:20px;
+  --shape-xl:28px;--shape-xl-inc:32px;--shape-xxl:48px;--shape-full:999px;
+  --sp-1:4px;--sp-2:8px;--sp-3:12px;--sp-4:16px;--sp-5:20px;--sp-6:24px;--sp-8:32px;--sp-10:40px;--sp-12:48px;
+  --page-pad:var(--sp-5);--target:48px;--phone-w:390px;--phone-h:844px;--cell-gap:80px;
+  --font-display:"Google Sans Flex","Google Sans",Roboto,sans-serif;
+  --font-body:Roboto,"Helvetica Neue",Arial,sans-serif;
+  --font-mono:"Roboto Mono",ui-monospace,Menlo,monospace;
+  --type-display-m:400 45px/52px var(--font-display);--type-display-s:400 36px/44px var(--font-display);
+  --type-headline-m:400 28px/36px var(--font-display);--type-headline-s:400 24px/32px var(--font-display);
+  --type-title-l:400 22px/28px var(--font-display);--type-title-m:500 16px/24px var(--font-display);
+  --type-title-s:500 14px/20px var(--font-display);
+  --type-body-l:400 16px/24px var(--font-body);--type-body-m:400 14px/20px var(--font-body);--type-body-s:400 12px/16px var(--font-body);
+  --type-label-l:500 14px/20px var(--font-body);--type-label-m:500 12px/16px var(--font-body);--type-label-s:500 11px/16px var(--font-body);
+  --type-mono:400 12px/16px var(--font-mono);
+  --ls-title-m:.15px;--ls-title-s:.1px;--ls-body-l:.5px;--ls-body-m:.25px;--ls-body-s:.4px;--ls-label-l:.1px;--ls-label-m:.5px;--ls-label-s:.5px;
+  --icon:24px;--stagger:40ms;
+  /* spring tokens (--m3-<name> and --m3-<name>-dur) are written here by the engine at load */
+}
+/* ===== BASE ===== */
+*,*::before,*::after{box-sizing:border-box;margin:0}
+html{scroll-behavior:smooth;background:var(--canvas)}
+body{font:var(--type-body-m);letter-spacing:var(--ls-body-m);color:var(--on-surface);background:var(--canvas);-webkit-font-smoothing:antialiased}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:3px solid var(--primary);outline-offset:2px}
+.t-display-m{font:var(--type-display-m)}.t-display-s{font:var(--type-display-s)}
+.t-headline-m{font:var(--type-headline-m)}.t-headline-s{font:var(--type-headline-s)}
+.t-title-l{font:var(--type-title-l)}.t-title-m{font:var(--type-title-m);letter-spacing:var(--ls-title-m)}.t-title-s{font:var(--type-title-s);letter-spacing:var(--ls-title-s)}
+.t-body-l{font:var(--type-body-l);letter-spacing:var(--ls-body-l)}.t-body-m{font:var(--type-body-m);letter-spacing:var(--ls-body-m)}.t-body-s{font:var(--type-body-s);letter-spacing:var(--ls-body-s)}
+.t-label-l{font:var(--type-label-l);letter-spacing:var(--ls-label-l)}.t-label-m{font:var(--type-label-m);letter-spacing:var(--ls-label-m)}.t-label-s{font:var(--type-label-s);letter-spacing:var(--ls-label-s)}
+.t-mono{font:var(--type-mono);font-variant-numeric:tabular-nums}
+.t-hero{font-variation-settings:"ROND" 100}.t-emph{font-weight:700}
+.ms{font-family:"Material Symbols Outlined";font-size:var(--icon);line-height:1;font-style:normal;font-weight:400;display:inline-block;
+  font-variation-settings:"FILL" 0,"wght" 400,"GRAD" 0,"opsz" 24;user-select:none}
+.ms.is-filled{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24}
+/* ===== PRESS SPRING (micro-interaction: fast spatial plus fast effects, corners tighten toward 12dp) ===== */
+.m3-press{--h:var(--target);border-radius:calc(var(--h)/2);position:relative;
+  transition:transform var(--m3-spatial-fast-dur) var(--m3-spatial-fast),border-radius var(--m3-spatial-fast-dur) var(--m3-spatial-fast),
+    background-color var(--m3-effects-fast-dur) var(--m3-effects-fast),box-shadow var(--m3-effects-fast-dur) var(--m3-effects-fast)}
+.m3-press:active{transform:scale(.97);border-radius:var(--shape-md)}
+.m3-press::after{content:"";position:absolute;inset:50% auto auto 50%;width:max(100%,var(--target));height:max(100%,var(--target));transform:translate(-50%,-50%)} /* 48dp hit area */
+/* ===== SHELL ===== */
+.draft-callout{background:var(--surface);border-bottom:1px solid var(--outline);padding:var(--sp-2) var(--page-pad);text-align:center;color:var(--on-surface-2)}
+.m3-top-app-bar{position:sticky;top:0;z-index:20;height:64px;display:flex;align-items:center;gap:var(--sp-4);padding:0 var(--page-pad);background:var(--surface);box-shadow:var(--elev-1)}
+.m3-top-app-bar h1{font:var(--type-title-l);flex:1}
+.m3-button-group{display:inline-flex;gap:var(--sp-1)}
+.m3-button-group button{height:40px;min-width:var(--target);padding:0 var(--sp-4);background:var(--surface-alt);color:var(--on-surface-2);font:var(--type-label-l);border-radius:var(--shape-md);
+  transition:border-radius var(--m3-spatial-fast-dur) var(--m3-spatial-fast),background-color var(--m3-effects-fast-dur) var(--m3-effects-fast)}
+.m3-button-group button:first-child{border-radius:var(--shape-full) var(--shape-md) var(--shape-md) var(--shape-full)}
+.m3-button-group button:last-child{border-radius:var(--shape-md) var(--shape-full) var(--shape-full) var(--shape-md)}
+.m3-button-group button[aria-pressed="true"]{background:var(--tint-blue);color:var(--on-tint-blue);border-radius:var(--shape-full)}
+.m3-text-button{display:inline-flex;align-items:center;gap:var(--sp-1);height:40px;padding:0 var(--sp-3);color:var(--primary);font:var(--type-label-l);border-radius:var(--shape-full)}
+.m3-text-button:hover{background:color-mix(in srgb,var(--primary) calc(var(--state-hover)*100%),transparent)}
+.m3-text-button .ms{font-size:18px}
+.m3-chip-filter{height:32px;padding:0 var(--sp-3);border:1px solid var(--outline);border-radius:var(--shape-full);font:var(--type-label-l);color:var(--on-surface-2);background:var(--surface);
+  transition:background-color var(--m3-effects-fast-dur) var(--m3-effects-fast)}
+.m3-chip-filter[aria-pressed="true"]{background:var(--tint-blue);border-color:transparent;color:var(--on-tint-blue)}
+main{padding:var(--sp-10) var(--page-pad)}
+#design-system,#flows{max-width:1200px;margin:0 auto}
+#grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(var(--phone-w) + var(--cell-gap)),1fr));gap:var(--cell-gap) var(--cell-gap);justify-items:center;padding:var(--cell-gap) 0}
+.phone-cell{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-2);width:var(--phone-w)}
+.cell-label{color:var(--on-surface-2);padding:0;height:var(--sp-6)}
+.cell-controls{display:flex;flex-wrap:wrap;gap:var(--sp-2);align-items:center;min-height:var(--sp-10)}
+.m3-phone{position:relative;width:var(--phone-w);height:var(--phone-h);background:var(--surface);border-radius:var(--shape-xxl);box-shadow:var(--elev-2);outline:1px solid var(--outline);overflow:hidden;display:flex;flex-direction:column}
+.m3-status-bar{height:var(--sp-12);display:flex;align-items:center;justify-content:space-between;padding:0 var(--sp-8);font:var(--type-title-s);flex:none}
+.status-icons{display:flex;gap:var(--sp-1)}.status-icons .ms{font-size:18px}
+.m3-screen{flex:1;position:relative;overflow:hidden;min-height:0}
+.m3-screen-pending{position:absolute;inset:0;display:grid;place-content:center;color:var(--on-surface-3);text-align:center;padding:var(--page-pad)}
+.m3-home-indicator{position:absolute;bottom:var(--sp-2);left:50%;transform:translateX(-50%);width:134px;height:5px;border-radius:var(--shape-full);background:var(--on-surface);pointer-events:none}
+/* entrance choreography: stagger at most 6 items, 40ms apart, translateY 16dp to 0 (spatial default) with opacity (effects default) */
+[data-enter]{opacity:0;transform:translateY(var(--sp-4))}
+.is-played [data-enter]{opacity:1;transform:none;
+  transition:transform var(--m3-spatial-default-dur) var(--m3-spatial-default) calc(var(--i,0)*var(--stagger)),opacity var(--m3-effects-default-dur) var(--m3-effects-default) calc(var(--i,0)*var(--stagger))}
+/* ===== COMPONENTS (M3 names so Flutter maps one-to-one) ===== */
+:root{--on-primary:#FFFFFF}
+[hidden]{display:none!important}
+.m3-phone .m3-top-app-bar{position:relative;box-shadow:none;height:64px;padding:0 var(--sp-3) 0 var(--page-pad);gap:var(--sp-1);flex:none}
+.m3-phone .m3-top-app-bar h2{font:var(--type-title-l);flex:1}
+.sc{display:flex;flex-direction:column;height:100%;background:var(--surface)}
+.sb{flex:1;min-height:0;overflow-y:auto;scrollbar-width:none;padding:var(--sp-2) var(--page-pad) var(--sp-6);display:flex;flex-direction:column;gap:var(--sp-4)}
+.sb::-webkit-scrollbar{display:none}
+.row{display:flex;align-items:center;gap:var(--sp-3)}.wrap{flex-wrap:wrap}.grow{flex:1;min-width:0}.col{display:flex;flex-direction:column;gap:var(--sp-2)}
+.t2{color:var(--on-surface-2)}.t3{color:var(--on-surface-3)}.ell{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-3)}
+.m3-icon-button{width:var(--target);height:var(--target);display:grid;place-items:center;border-radius:var(--shape-full);color:var(--on-surface-2);flex:none}
+.m3-filled-button{--h:56px;height:var(--h);padding:0 var(--sp-6);background:var(--primary);color:var(--on-primary);font:var(--type-label-l);display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-2);flex:none}
+.m3-filled-button:hover{box-shadow:var(--elev-1)}.m3-filled-button:active{background:var(--primary-press);box-shadow:none}
+.m3-filled-button.sm{--h:40px;padding:0 var(--sp-4)}.m3-filled-button.wide{width:100%}
+.m3-outlined-button{--h:40px;height:var(--h);padding:0 var(--sp-4);border:1px solid var(--outline);color:var(--primary);font:var(--type-label-l);display:inline-flex;align-items:center;gap:var(--sp-2);flex:none}
+.m3-chip-assist{display:inline-flex;align-items:center;gap:var(--sp-1);height:28px;padding:0 10px;border-radius:var(--shape-full);font:var(--type-label-m);letter-spacing:var(--ls-label-m);background:var(--surface-alt);color:var(--on-surface-2);white-space:nowrap}
+.m3-chip-assist .ms{font-size:16px}
+.blue{background:var(--tint-blue);color:var(--on-tint-blue)}.green{background:var(--tint-green);color:var(--on-tint-green)}.red{background:var(--tint-red);color:var(--on-tint-red)}.yellow{background:var(--tint-yellow);color:var(--on-tint-amber)}
+.m3-card-outlined{background:var(--surface);border:1px solid var(--outline);border-radius:var(--shape-lg);padding:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-3)}
+.m3-card-outlined.hero{border-radius:var(--shape-xl)}.m3-card-outlined.tint{border-color:transparent}.m3-card-outlined.tint.blue{background:var(--tint-blue)}.m3-card-outlined.tint.green{background:var(--tint-green)}.m3-card-outlined.tint.red{background:var(--tint-red)}.m3-card-outlined.tint.yellow{background:var(--tint-yellow)}
+.m3-avatar{width:40px;height:40px;border-radius:var(--shape-full);display:grid;place-items:center;font:var(--type-title-s);flex:none}
+.m3-avatar.sm{width:28px;height:28px;font:var(--type-label-m)}.m3-avatar.lg{width:72px;height:72px;font:var(--type-headline-s)}
+.stack{display:flex}.stack .m3-avatar{margin-left:-8px;outline:2px solid var(--surface)}.stack .m3-avatar:first-child{margin-left:0}
+.m3-list-item{display:flex;align-items:center;gap:var(--sp-3);min-height:56px;padding:var(--sp-2) 0;border-bottom:1px solid var(--surface-alt)}
+.m3-linear-progress{height:6px;border-radius:var(--shape-full);background:var(--surface-alt);overflow:hidden}
+.m3-linear-progress>b{display:block;height:100%;width:var(--v);background:var(--c,var(--brand-blue));border-radius:var(--shape-full)}
+.m3-tile{width:44px;height:44px;border-radius:var(--shape-md);display:grid;place-items:center;flex:none;color:var(--c1,var(--brand-blue));
+  background:radial-gradient(120% 120% at 0 0,color-mix(in srgb,var(--c1,var(--brand-blue)) 18%,var(--surface)),transparent 70%),radial-gradient(100% 100% at 100% 100%,color-mix(in srgb,var(--c2,var(--brand-green)) 14%,var(--surface)),transparent 70%),var(--surface);outline:1px solid var(--outline)}
+.shape{width:var(--sz,48px);height:var(--sz,48px);display:grid;place-items:center;flex:none;border-radius:44% 56% 52% 48%/50% 44% 56% 50%}
+.m3-navigation-bar{height:80px;display:flex;padding-top:var(--sp-3);background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-top:1px solid var(--outline);flex:none;position:relative;z-index:3}
+.nv{flex:1;display:flex;flex-direction:column;align-items:center;gap:var(--sp-1);font:var(--type-label-m);letter-spacing:var(--ls-label-m);color:var(--on-surface-2);min-height:var(--target)}
+.nv i{width:64px;height:32px;display:grid;place-items:center;border-radius:var(--shape-full);transition:background-color var(--m3-effects-default-dur) var(--m3-effects-default)}
+.nv[aria-selected="true"]{color:var(--primary)}.nv[aria-selected="true"] i{background:var(--tint-blue)}
+.nv[aria-selected="true"] .ms{font-variation-settings:"FILL" 1,"wght" 400,"GRAD" 0,"opsz" 24}
+.m3-fab-primary{position:absolute;right:var(--page-pad);bottom:96px;height:56px;padding:0 var(--sp-4);border-radius:var(--shape-lg);background:var(--tint-blue);color:var(--on-tint-blue);box-shadow:var(--elev-3);display:flex;align-items:center;gap:var(--sp-2);font:var(--type-label-l);z-index:4}
+.poster{position:relative;overflow:hidden;border-radius:var(--shape-lg);background:radial-gradient(120% 90% at 0 0,color-mix(in srgb,var(--c1,var(--brand-blue)) 16%,var(--surface)),transparent 62%),radial-gradient(110% 90% at 100% 100%,color-mix(in srgb,var(--c2,var(--brand-green)) 14%,var(--surface)),transparent 58%),var(--surface-alt)}
+.poster .shape{position:absolute;right:-28px;top:-12px;--sz:168px;background:color-mix(in srgb,var(--c1,var(--brand-blue)) 12%,transparent);color:var(--c1,var(--brand-blue))}
+.poster .shape .ms{font-size:72px}
+.glass{background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);box-shadow:var(--elev-3)}
+.deck{position:relative;flex:1;min-height:0;touch-action:pan-y;user-select:none}
+.dk{position:absolute;left:15px;top:0;bottom:0;width:359px;background:var(--surface);border-radius:var(--shape-lg);box-shadow:var(--elev-1);display:flex;flex-direction:column;overflow:hidden;
+  transition:transform var(--m3-spatial-default-dur) var(--m3-spatial-default),opacity var(--m3-effects-default-dur) var(--m3-effects-default);transform:translateX(calc(var(--o)*363px)) scale(var(--s,1));opacity:var(--op,1);z-index:var(--z,1)}
+.dk.f{box-shadow:var(--elev-2);--z:2}.dk.dragging{transition:none}
+.dk .poster{flex:6;border-radius:0}.dk .info{flex:4;padding:var(--sp-4);display:flex;flex-direction:column;gap:var(--sp-2)}
+.dots{display:flex;justify-content:center;align-items:center;gap:var(--sp-2);height:var(--target)}
+.dots button{width:6px;height:6px;border-radius:var(--shape-full);background:var(--outline);position:relative;transition:width var(--m3-spatial-fast-dur) var(--m3-spatial-fast)}
+.dots button::after{content:"";position:absolute;inset:-21px -9px}.dots button[aria-current="true"]{width:8px;height:8px;background:var(--brand-blue)}
+.chev{position:absolute;top:42%;width:var(--target);height:var(--target);display:grid;place-items:center;opacity:.4;z-index:5;border-radius:var(--shape-full)}
+.mesh{position:absolute;inset:0 0 auto 0;height:300px;overflow:hidden;filter:blur(36px)}
+.mesh i{position:absolute;width:200px;height:200px;border-radius:50%;opacity:.14;background:var(--c);animation:drift var(--d) ease-in-out infinite alternate}
+@keyframes drift{to{transform:translate(var(--x),var(--y))}}
+@media (prefers-reduced-motion:reduce){.mesh i{animation:none}}
+.sheet{position:absolute;left:0;right:0;bottom:0;background:var(--surface);border-radius:var(--shape-xl) var(--shape-xl) 0 0;box-shadow:var(--elev-3);padding:var(--sp-6) var(--page-pad) var(--sp-10);display:flex;flex-direction:column;gap:var(--sp-3);z-index:6}
+.field{height:56px;background:var(--surface-alt);border-radius:var(--shape-xs) var(--shape-xs) 0 0;padding:var(--sp-2) var(--sp-4);border-bottom:1px solid var(--on-surface-3);display:flex;flex-direction:column;justify-content:center}
+.field.on{border-bottom:2px solid var(--primary)}
+.otp{display:flex;gap:var(--sp-2);justify-content:space-between}.otp b{width:48px;height:56px;border-radius:var(--shape-xs);background:var(--surface-alt);display:grid;place-items:center;font:var(--type-headline-s);font-family:var(--font-mono);border-bottom:1px solid var(--on-surface-3)}.otp b.on{border-bottom:2px solid var(--primary);outline:2px solid var(--primary);background:var(--surface)}
+.big{font:var(--type-headline-m)}.sec{font:var(--type-title-m);letter-spacing:var(--ls-title-m)}
+.glyph{width:40px;height:40px;border-radius:var(--shape-full);background:var(--surface-alt);display:grid;place-items:center;color:var(--on-surface-2);position:relative}
+.glyph::after{content:"";position:absolute;inset:-4px}
+.you{background:var(--tint-blue);border-radius:var(--shape-md);padding-left:var(--sp-2);padding-right:var(--sp-2)}
+.rk{width:24px;text-align:center}
+/* Solo view: one frame at 1:1 */
+body[data-view="solo"] #design-system,body[data-view="solo"] #flows{display:none}
+body[data-view="solo"] #grid{display:flex;justify-content:center;padding:var(--sp-8) 0}
+body[data-view="solo"] .phone-cell:not(.is-current){display:none}
+@media (prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}[data-enter]{opacity:1;transform:none;transition:none!important}.m3-press{transition:none}}
+/* ===== ADDITIONS: scrim, kill feed, live dot, sticky bar, intro, design system, flows (tokens only, no new values) ===== */
+.m3-screen::before{content:"";position:absolute;inset:0;background:color-mix(in srgb,var(--on-surface) 32%,transparent);z-index:5;opacity:0;transition:opacity var(--m3-effects-default-dur) var(--m3-effects-default);pointer-events:none}
+.m3-screen:has(.sheet:not([hidden]))::before{opacity:1;pointer-events:auto}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.feed{position:relative;overflow:hidden;margin:0 calc(var(--page-pad)*-1);height:64px;flex:none}
+.feed::before,.feed::after{content:"";position:absolute;top:0;bottom:0;width:var(--sp-10);z-index:1;pointer-events:none}
+.feed::before{left:0;background:linear-gradient(90deg,var(--surface),transparent)}.feed::after{right:0;background:linear-gradient(270deg,var(--surface),transparent)}
+.feed-track{display:flex;gap:var(--sp-3);width:max-content;padding-left:var(--sp-3);will-change:transform}
+.kf{--h:64px;flex:none;width:220px;height:64px;display:flex;align-items:center;gap:var(--sp-3);padding:0 var(--sp-4) 0 var(--sp-3);background:var(--surface-alt);text-align:left}
+.kf .col{gap:0;min-width:0}
+.feed.is-static .feed-track{width:auto;justify-content:center;padding:0}
+.feed.is-static .dup,.feed.is-static .kf:not([data-latest]){display:none}
+.feed.is-static::before,.feed.is-static::after{display:none}
+.live{position:relative;display:inline-block;width:8px;height:8px;margin-right:var(--sp-2);border-radius:var(--shape-full);background:var(--brand-green);vertical-align:middle}
+.live::after{content:"";position:absolute;inset:-4px;border-radius:var(--shape-full);background:var(--brand-green);opacity:.4;animation:halo 1.6s linear infinite}
+@keyframes halo{to{transform:scale(1.6);opacity:0}}
+@media (prefers-reduced-motion:reduce){.live::after{display:none}}
+.sbar{position:absolute;left:0;right:0;bottom:0;height:80px;padding:0 var(--page-pad);display:flex;align-items:center;gap:var(--sp-3);z-index:4;background:color-mix(in srgb,var(--surface) 72%,transparent);backdrop-filter:blur(20px) saturate(1.4);-webkit-backdrop-filter:blur(20px) saturate(1.4);border-top:1px solid var(--outline);
+  visibility:hidden;transform:translateY(100%);transition:transform var(--m3-spatial-default-dur) var(--m3-spatial-default),visibility 0s linear var(--m3-spatial-default-dur)}
+.sbar.on{visibility:visible;transform:none;transition-delay:0s}
+html.intro-on :is(.draft-callout,header,main){opacity:0;animation:reveal 1ms 3s forwards}
+@keyframes reveal{to{opacity:1}}
+.intro{display:none;position:fixed;inset:0;z-index:9999;pointer-events:none;overflow:hidden}
+html.intro-on .intro,.intro.go{display:block}
+.intro>*{position:absolute;opacity:0}
+.i-scrim{inset:0;background:color-mix(in srgb,var(--on-surface) 20%,transparent)}
+.i-glow{left:50%;top:50%;width:420px;height:420px;margin:-210px 0 0 -210px;background:radial-gradient(closest-side,color-mix(in srgb,var(--brand-blue) 15%,transparent),transparent)}
+.i-logo{left:50%;top:50%;width:192px;height:96px;margin:-48px 0 0 -96px}
+.i-logo svg{position:absolute;top:0;width:96px;height:96px}.i-tl{left:0}.i-br{left:96px}
+.i-ln{position:absolute;left:96px;top:48px;width:0;height:0;transform:rotate(45deg)}
+.i-ln i{position:absolute;left:-120px;top:-1px;width:240px;height:2px;background:var(--brand-blue);transform-origin:0 50%;transform:scaleX(0)}
+.ds{display:grid;gap:var(--sp-10);padding:var(--sp-10) 0}.blk{display:grid;gap:var(--sp-4)}
+.sw{width:120px;display:flex;flex-direction:column;gap:var(--sp-1)}.sw i{height:48px;border-radius:var(--shape-sm);outline:1px solid var(--outline);outline-offset:-1px}
+.spr{border-collapse:collapse;width:100%;max-width:640px}.spr th,.spr td{text-align:left;padding:var(--sp-2) var(--sp-3);border-bottom:1px solid var(--outline)}.spr th{font:var(--type-label-m);color:var(--on-surface-2)}
+.fl{position:relative;overflow-x:auto;padding:var(--sp-4) 0}.fl-in{position:relative}
+.fl-band{position:absolute;left:0;right:0;border:1px solid var(--outline);border-radius:var(--shape-xl);background:var(--surface)}
+.fl svg.map{position:absolute;inset:0;pointer-events:none;overflow:visible}
+.fn{position:absolute;width:140px}
+.tn{width:140px;height:303px;border-radius:var(--shape-lg);overflow:hidden;box-shadow:var(--elev-1);outline:1px solid var(--outline);pointer-events:none}
+.tn .m3-phone{transform:scale(.359);transform-origin:0 0;box-shadow:none;outline:0}
+.ar{fill:none;stroke:var(--on-surface-3);stroke-width:2;stroke-linecap:round;stroke-linejoin:round}.ar.b{stroke:var(--primary)}.ar.g{stroke:var(--brand-green);stroke-dasharray:6 5}
+.fl text{font:var(--type-label-m);fill:var(--on-surface-2);paint-order:stroke;stroke:var(--surface);stroke-width:4px;stroke-linejoin:round}
+</style>
+</head>
+<body data-view="grid">
+<!-- GDG logo STAND-IN. REPLACE WITH OFFICIAL ASSET. Never present as official. Full-color on white or light grey only. -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+  <symbol id="gdg-logo" viewBox="0 0 64 32">
+    <g fill="none" stroke-width="5" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M17 6 L5 16" stroke="var(--brand-blue)"/><path d="M5 16 L17 26" stroke="var(--brand-green)"/>
+      <path d="M47 6 L59 16" stroke="var(--brand-red)"/><path d="M59 16 L47 26" stroke="var(--brand-yellow)"/>
+    </g>
+  </symbol>
+</svg>
+
+<div class="intro" aria-hidden="true"><i class="i-scrim"></i><i class="i-glow"></i><div class="i-logo"><svg class="i-tl" viewBox="0 0 32 32"><use href="#gdg-logo" width="64" height="32"/></svg><svg class="i-br" viewBox="32 0 32 32"><use href="#gdg-logo" width="64" height="32"/></svg><b class="i-ln"><i></i></b></div></div>
+<div class="draft-callout t-mono">FINAL MOCKUPS · v2 · DRAFT FOR LEAD REVIEW · NOT FOR PRODUCTION</div>
+<header class="m3-top-app-bar">
+  <svg width="40" height="20" role="img" aria-label="GDG logo stand-in"><use href="#gdg-logo"/></svg>
+  <h1>GDGoC PSIT: Design Mockups</h1>
+  <div class="m3-button-group" role="group" aria-label="View">
+    <button id="v-grid" aria-pressed="true">Grid</button><button id="v-solo" aria-pressed="false">Solo</button>
+  </div>
+  <button class="m3-text-button" id="solo-prev" aria-label="Previous screen" hidden><span class="ms" aria-hidden="true">chevron_left</span></button>
+  <span class="t-mono" id="counter" aria-live="polite">22 screens</span>
+  <button class="m3-text-button" id="solo-next" aria-label="Next screen" hidden><span class="ms" aria-hidden="true">chevron_right</span></button>
+</header>
+<main>
+  <section id="design-system" aria-label="Design system reference"></section>
+  <div id="grid"></div>
+  <section id="flows" aria-label="Flow reference"></section>
+</main>
+<div id="templates" hidden>
+<!-- Screens arrive as <template data-screen="slug"> in passes 3 to 6; the shell clones each into its frame -->
+<script>
+/* MOCK DATA: synthetic names beyond the brief's dataset, rolls follow Aarav's 13-digit pattern, points use a mock weighting. REPLACE with real data. */
+const P=[["Ishita Verma",1240],["Kabir Singh",1105],["Ananya Mishra",980],["Rohan Gupta",905],["Priya Tripathi",860],["Vivek Yadav",815],["Sanya Khan",770],["Meera Joshi",690],["Aditya Pandey",640],["Nidhi Saxena",590],["Harsh Tiwari",540],["Pooja Dwivedi",500],["Shivam Mishra",455],["Aarav Sharma",410]];
+const roll=i=>i===13?"2501640100567":"25016401"+String(100+i*53).padStart(5,"0");
+const I=(n,f)=>`<span class="ms${f?" is-filled":""}" aria-hidden="true">${n}</span>`;
+const LOGO='<svg width="44" height="22" role="img" aria-label="GDG on Campus PSIT"><use href="#gdg-logo"/></svg>';
+const CL=["blue","green","red","yellow"];
+const av=(n,i=0,x="")=>`<span class="m3-avatar ${x} ${CL[i%4]}">${n.split(" ").map(w=>w[0]).join("").slice(0,2)}</span>`;
+const ch=(t,c="",ic)=>`<span class="m3-chip-assist ${c}">${ic?I(ic):""}${t}</span>`;
+const ib=(i,l)=>`<button class="m3-icon-button m3-press" aria-label="${l}">${I(i)}</button>`;
+const bar=(t,r="",l="")=>`<div class="m3-top-app-bar">${l}<h2>${t}</h2>${r}</div>`;
+const bell=ib("notifications","Notifications");
+const NAV={m:[["home","Home"],["calendar_month","Events"],["code","Projects"],["school","Learn"],["person","Profile"]],c:[["dashboard","Dashboard"],["calendar_month","Events"],["code","Projects"],["groups","Members"],["account_circle","Me"]],t:[["monitoring","Overview"],["group","Students"],["code","Projects"],["insights","Insights"]]};
+const nav=(r,a)=>`<nav class="m3-navigation-bar" role="tablist" aria-label="Primary">${NAV[r].map(([i,l])=>`<button class="nv m3-press" role="tab" aria-selected="${l===a}"><i>${I(i)}</i>${l}</button>`).join("")}</nav>`;
+const sc=(top,body,bot="",x="")=>`<div class="sc">${top}<div class="sb">${body}</div>${bot}${x}</div>`;
+const row=(a,t,s,r="")=>`<div class="m3-list-item">${a}<div class="grow"><div class="t-title-m ell">${t}</div><div class="t-body-s t2 ell">${s}</div></div>${r}</div>`;
+const sec=(t,r="")=>`<div class="row" data-enter><div class="sec grow">${t}</div>${r}</div>`;
+const link=t=>`<button class="m3-text-button m3-press">${t}</button>`;
+const kpi=(n,l,c,ic)=>`<div class="m3-card-outlined tint ${c}" data-enter><div class="row">${I(ic)}<span class="t-label-m">${l}</span></div><div class="t-display-s">${n}</div></div>`;
+const back=ib("arrow_back","Back");
+const EV=[["Hacktoberfest 2026 Kickoff","Sat 10 Oct · 11:00 AM · Seminar Hall","147 of 150","Registered","green","emoji_events","blue","green"],["Intro to Flutter Workshop","Wed 14 Oct · 2:00 PM · Lab 4","100 of 100","Waitlist","yellow","flutter_dash","blue","yellow"],["Cloud Study Jam: GCP Fundamentals","Sat 17 Oct · 10:00 AM · CS Block 201","64 of 80","Open","blue","cloud","blue","red"],["AI/ML Build Night","Thu 22 Oct · 5:00 PM · Innovation Lab","38 of 60","Open","blue","neurology","red","green"],["Demo Day · Semester End","Fri 30 Oct · 3:00 PM · Auditorium","12 of 200","Open","blue","present_to_all","green","blue"],["Android Basics Bootcamp","Thu 1 Oct · 4:00 PM · Seminar Hall","Past event","Attended","","android","green","yellow"]];
+const pst=(c1,c2,ic,h="",x="")=>`<div class="poster ${x}" style="--c1:var(--brand-${c1});--c2:var(--brand-${c2})"><div class="shape">${I(ic)}</div>${h}</div>`;
+const PR=[["GDGoC Web App","Next.js · TypeScript · Tailwind","web","blue","green",12,41,27,4],["GDGoC Android App","Kotlin · Jetpack Compose","android","green","yellow",9,29,20,3],["Hacktoberfest Docs","Markdown · Docusaurus","description","red","yellow",7,17,14,1]];
+const pcard=p=>`<div class="m3-card-outlined" data-enter><div class="row"><div class="m3-tile" style="--c1:var(--brand-${p[3]});--c2:var(--brand-${p[4]})">${I(p[2])}</div><div class="grow"><div class="t-title-m">${p[0]}</div><div class="t-body-s t2">${p[1]}</div></div>${p[0].includes("Web")?ch("Joined","green"):""}</div><div class="t-mono t2">${p[5]} open · ${p[6]} merged · ${p[7]} contributors</div></div>`;
+const qr=()=>{let s="";for(let y=0;y<21;y++)for(let x=0;x<21;x++){if((x<8&&y<8)||(x>12&&y<8)||(x<8&&y>12))continue;if((x*31+y*17+x*y)%5<2)s+=`<rect x="${x}" y="${y}" width="1" height="1"/>`}
+const f=(x,y)=>`<rect x="${x}" y="${y}" width="7" height="7"/><rect x="${x+1}" y="${y+1}" width="5" height="5" fill="var(--surface)"/><rect x="${x+2}" y="${y+2}" width="3" height="3"/>`;
+return `<svg viewBox="0 0 21 21" width="200" height="200" shape-rendering="crispEdges" fill="currentColor" role="img" aria-label="Ticket QR code" style="color:var(--on-surface)">${s}${f(0,0)}${f(14,0)}${f(0,14)}</svg>`};
+const T=(s,h)=>{const t=document.createElement("template");t.dataset.screen=s;t.innerHTML=h;document.getElementById("templates").append(t)};
+const lead=P.slice(0,3).map((p,i)=>row(`<span class="rk t-title-m">${i+1}</span>${av(p[0],i)}`,p[0],`${p[1].toLocaleString()} points`)).join("");
+const rest=P.slice(3).map((p,i)=>row(`<span class="rk t-title-m">${i+4}</span>${av(p[0],i+3)}`,p[0],`${p[1].toLocaleString()} points`).replace("m3-list-item",i===10?"m3-list-item you":"m3-list-item")).join("");
+const board=`<div class="m3-card-outlined hero" data-enter><div class="row"><div class="grow"><div class="t-label-m t2">Your rank on the Board</div><div class="t-display-s">#14</div></div>${ch("410 points","blue","bolt")}</div>${lead}<div class="col" data-on="board-expanded" hidden style="gap:0">${rest}</div><div class="row">${ch("Events","","event")}${ch("Learning","","school")}${ch("PRs","","merge")}<span class="grow"></span>${link("View full Board")}</div></div>`;
+const steps=[["Join the project","Say hello in the project channel."],["Set up your repo","Fork it and run the app locally."],["Claim a beginner issue","Open a PR and ask for review."]];
+const prs=[["Ishita Verma","fix: keyboard trap in claim modal","+42 -7"],["Priya Tripathi","refactor: split Board query hook","+120 -96"],["Vivek Yadav","feat: attendee CSV export","+210 -12"],["Meera Joshi","fix: ticket QR contrast","+18 -4"]];
+const prrow=(p,i)=>row(av(p[0],i),p[1],`${p[0]} · <span style="color:var(--on-tint-green)">${p[2].split(" ")[0]}</span> <span style="color:var(--on-tint-red)">${p[2].split(" ")[1]}</span>`,`<button class="m3-outlined-button m3-press">Review</button>`).replace("t-body-s","t-body-s t-mono");
+const iss=[["#214","Keyboard trap in claim modal","Beginner","green",["Ishita Verma"]],["#228","Add dark theme tokens to the Board","Intermediate","yellow",["Priya Tripathi","Vivek Yadav"]],["#236","Paginate the attendee list","Intermediate","yellow",["Aarav Sharma"]],["#241","OTP box focus on Android Chrome","Advanced","red",[]]];
+
+const LIVE='<i class="live" aria-hidden="true"></i>';
+const FEED=[["Ishita Verma","merged a PR","2m"],["Rudransh Singh","joined the chapter","just now"],["Kabir Singh","joined Android App","1h"],["Ananya Mishra","registered for Kickoff","3h"],["Sanya Khan","completed Android module 3","5h"],["Priya Tripathi","opened a docs PR","6h"],["Vivek Yadav","earned First PR badge","8h"],["Meera Joshi","attended Cloud Study Jam","yesterday"],["Aditya Pandey","claimed issue #236","yesterday"],["Nidhi Saxena","joined the chapter","2d"]];
+const ago=t=>t.replace(/^(\d+)([mhd])$/,(_,n,u)=>`${n} ${{m:"minute",h:"hour",d:"day"}[u]}${n>1?"s":""} ago`);
+const kf=(f,i,d)=>`<button class="kf m3-press${d?" dup":""}"${i===1&&!d?" data-latest":""} aria-label="${f[0]} ${f[1].replace("PR","pull request")}, ${ago(f[2])}"${d?' aria-hidden="true" tabindex="-1"':""}>${av(f[0],i)}<span class="col"><span class="t-mono ell">${f[0]}</span><span class="t-body-s t2 ell">${f[1]} · ${f[2]}</span></span></button>`;
+const feed=`<div class="feed" role="group" aria-label="Recent chapter activity" data-enter><div class="feed-track">${FEED.map((f,i)=>kf(f,i)).join("")}${FEED.map((f,i)=>kf(f,i,1)).join("")}</div></div>`;
+const SBAR=`<div class="sbar"><button class="m3-filled-button m3-press wide" data-on="scroll-top scroll-middle scroll-bottom">Join the chapter</button><div class="row grow" data-on="member" hidden><span class="m3-chip-assist" style="height:40px;padding:0 var(--sp-3) 0 var(--sp-1)">${av("Aarav Sharma",0,"sm")}Aarav Sharma</span><span class="grow"></span><button class="m3-text-button m3-press">Open the app</button></div></div>`;
+
+/* 01 Landing */
+T("landing",sc(`<div class="m3-top-app-bar">${LOGO}<span class="grow"></span><button class="m3-text-button m3-press">Join</button></div>`,
+`<div data-enter data-hero class="col" style="margin:-8px -20px 0;padding:32px 20px 24px;background:radial-gradient(90% 60% at 100% 0,color-mix(in srgb,var(--brand-blue) 14%,var(--surface)),transparent 70%),radial-gradient(70% 50% at 0 100%,color-mix(in srgb,var(--brand-yellow) 12%,var(--surface)),transparent 70%),var(--surface)">
+<h1 class="t-display-m t-hero t-emph">GDG on<br>Campus<br>PSIT</h1><p class="t-body-l t2">Learn, build and ship with your chapter.<br>Workshops, study jams and open-source projects, all year.</p>
+<div class="col" style="margin-top:16px"><button class="m3-filled-button m3-press wide">Join the chapter</button><button class="m3-text-button m3-press">See how it works</button></div>
+<div class="g2" style="grid-template-columns:repeat(3,1fr);margin-top:8px"><div><div class="t-mono t-title-m" data-count="214">214</div><div class="t-body-s t2">students</div></div><div><div class="t-mono t-title-m" data-count="3">3</div><div class="t-body-s t2">projects</div></div><div><div class="t-mono t-title-m" data-count="87">87</div><div class="t-body-s t2">merged PRs</div></div><span class="sr" aria-live="polite"></span></div></div>
+${sec("What is GDG on Campus?")}${[["school","Learn","Study jams and learning paths in Android, web, ML and cloud."],["build","Build","Work on real projects with mentors and teammates."],["rocket_launch","Ship","Demo your work and earn points on the Board."]].map((r,i)=>row(`<span class="shape ${CL[i]}" style="--sz:44px">${I(r[0])}</span>`,r[1],r[2]).replace("ell","")).join("")}
+${sec("How to get involved")}${["Join the chapter","Pick an event or project","Contribute and learn","Earn points on the Board"].map((s,i)=>`<div class="row" data-enter><span class="m3-avatar sm" style="background:var(--primary);color:var(--on-primary)">${i+1}</span><span class="t-body-l">${s}</span></div>`).join("")}
+${sec("Coming up")}<div class="m3-card-outlined hero" data-enter>${pst("blue","green","emoji_events",'<div style="height:140px"></div>')}<div class="t-title-l">${LIVE}Hacktoberfest 2026 Kickoff</div><div class="t-body-m t2">Sat 10 Oct · 11:00 AM · Seminar Hall</div></div>
+${sec("Happening in the chapter")}${feed}
+<div class="col" style="align-items:center" data-enter>${LOGO}<div class="row">${["GitHub","Instagram","X","LinkedIn","Discord","YouTube"].map(n=>`<button class="glyph m3-press" aria-label="${n}">${I("link")}</button>`).join("")}</div><div class="t-mono t3">© 2026 GDG on Campus PSIT</div></div><div style="height:40px"></div>`,"",SBAR));
+/* 02 Join and verify */
+T("join-verify",sc(bar("","",back),`<h1 class="t-headline-m t-hero" data-enter>Verify your PSIT account</h1><p class="t-body-l t2" data-enter>We match your roll number with PSIT records.</p>
+<div class="field on" data-enter><span class="t-label-s" style="color:var(--primary)">Roll number</span><span class="t-mono" style="font-size:16px;line-height:24px">2501640100567</span></div>
+<div class="col" data-enter><div class="field"><span class="t-label-s t2">Gmail</span><span class="t-body-l">aarav.sharma@gmail.com</span></div><span class="t-body-s t2" style="padding:0 16px">Use the @gmail.com address linked to your PSIT record</span></div>
+<div class="grow"></div><button class="m3-filled-button m3-press wide" data-enter>Send verification code</button><p class="t-body-s t3" style="text-align:center">By continuing you agree to the chapter's terms and privacy policy.</p>`));
+/* 03 OTP */
+T("otp",sc(bar("","",back),`<h1 class="t-headline-m t-hero" data-enter>Enter the 6-digit code</h1><p class="t-body-l t2" data-enter>Sent to aarav.sharma@gmail.com</p>
+<div class="otp" data-enter><b class="on"></b><b></b><b></b><b></b><b></b><b></b></div><div class="t-body-m t2" data-enter>Resend in <span class="t-mono">0:24</span></div><div class="grow"></div>
+<button class="m3-filled-button m3-press wide" data-on="default">Verify</button>
+<div data-on="verifying" hidden class="col" style="align-items:center"><div class="m3-filled-button wide" style="border-radius:28px"><span class="load"></span></div><span class="t-body-m t2">Checking your roll number against PSIT records</span></div>
+<button class="m3-text-button m3-press" style="align-self:center">Wrong email? Go back</button>`));
+/* 04 Role router */
+T("role-router",sc(bar("","",""),`<div class="grow"></div><div class="col" style="align-items:center;text-align:center;gap:16px"><span class="shape green pop" style="--sz:112px">${I("check")}</span><h1 class="t-headline-m t-hero" data-enter>You're in, Aarav</h1>
+<div class="t-body-l t2" data-on="member">Member · Computer Science, 3rd year</div><div class="t-body-l t2" data-on="core-team" hidden>Core Team · Computer Science, 3rd year</div><div class="t-body-l t2" data-on="mentor" hidden>Mentor · Faculty</div></div><div class="grow"></div><button class="m3-filled-button m3-press wide">Enter the app</button>`));
+/* 05 Home */
+T("home",sc(`<div class="m3-top-app-bar">${LOGO}<span class="grow"></span>${bell}</div>`,`<h1 class="t-headline-m t-hero" data-enter>Good morning, Aarav</h1>${board}
+${sec("Events",link("See all"))}<div class="row" style="overflow:hidden;margin-right:-20px" data-enter><div style="flex:none;width:260px">${pst("blue","green","emoji_events",`<div style="height:150px;padding:12px;display:flex;align-items:flex-end"><span class="t-title-l">${LIVE}Hacktoberfest 2026 Kickoff</span></div>`)}<div class="row" style="margin-top:8px">${ch("Registered","green","check")}<span class="grow"></span>${ib("qr_code_2","View ticket")}</div><div class="t-body-s t2">Sat 10 Oct · Seminar Hall</div></div>${EV.slice(1,3).map(e=>`<div style="flex:none;width:132px">${pst(e[6],e[7],e[5],'<div style="height:96px"></div>')}<div class="t-title-s ell" style="margin-top:8px">${e[0]}</div><div class="t-body-s t2">${e[1].split(" · ")[0]}</div></div>`).join("")}</div>
+${sec("Projects")}<div class="row" style="gap:8px" data-enter>${PR.map(p=>`<div class="m3-card-outlined grow" style="padding:12px;min-width:0"><div class="m3-tile" style="--c1:var(--brand-${p[3]});--c2:var(--brand-${p[4]})">${I(p[2])}</div><div class="t-title-s">${p[0].replace("GDGoC ","")}</div></div>`).join("")}</div>
+${sec("Activity")}<div class="g2" data-enter>${[["Ishita Verma","opened a PR","2m"],["Kabir Singh","joined Android App","1h"],["Ananya Mishra","joined a waitlist","3h"],["Sanya Khan","opened a docs PR","5h"]].map((a,i)=>`<div class="m3-card-outlined" style="padding:12px;gap:8px">${av(a[0],i,"sm")}<div class="t-body-s ell">${a[0].split(" ")[0]} ${a[1]}</div><div class="t-label-s t3">${a[2]}</div></div>`).join("")}</div>`,nav("m","Home")));
+/* 06 Events deck */
+const dots=EV.map((e,i)=>`<button data-go="${i}" aria-label="Go to ${e[0]}" aria-current="${i===0}"></button>`).join("");
+T("events",sc(bar("Events","",""),`<div class="row wrap" data-enter>${["All","Open","Registered","Waitlist","Past"].map((c,i)=>`<button class="m3-chip-filter" aria-pressed="${!i}">${c}</button>`).join("")}</div>
+<div class="deck" data-i="0" style="margin:0 -20px;flex:1" data-enter><span class="t-mono t3 cnt" style="position:absolute;right:20px;top:-24px">1 of 6</span><button class="chev" data-deck="-1" style="left:18px" aria-label="Previous event">${I("chevron_left")}</button><button class="chev" data-deck="1" style="right:18px" aria-label="Next event">${I("chevron_right")}</button>
+${EV.map((e,i)=>`<article class="dk${i?"":" f"}" style="--o:${i};--s:${i?.94:1};--op:${i>1?0:1}">${pst(e[6],e[7],e[5],`<div style="position:absolute;left:16px;right:16px;bottom:12px" class="t-display-s">${i?"":LIVE}${e[0]}</div>`)}<div class="info"><div class="row wrap">${ch(e[1].split(" · ")[0]+" · "+e[1].split(" · ")[1],"","schedule")}${ch(e[1].split(" · ")[2],"","location_on")}</div><div class="t-body-m t2">${e[2]}${e[3]==="Attended"?" · you attended":" registered"}</div><div class="row">${ch(e[3],e[4])}<span class="grow"></span><button class="m3-filled-button sm m3-press">View details</button></div></div></article>`).join("")}</div>
+<div class="dots" data-enter>${dots}</div>`,nav("m","Events")));
+/* 07 Event detail */
+T("event-detail",sc(bar("","<span class='grow'></span>"+ib("ios_share","Share"),back),`<div class="row" style="overflow:hidden;gap:8px;margin-right:-20px" data-enter>${[["Kickoff","blue","green","emoji_events"],["Speakers","red","yellow","mic"],["Agenda","green","blue","event_note"],["Venue","yellow","red","location_on"]].map(p=>`<div style="flex:none;width:300px">${pst(p[1],p[2],p[3],`<div style="height:200px;padding:16px;display:flex;align-items:flex-end" class="t-title-l">${p[0]}</div>`)}</div>`).join("")}</div>
+<div class="row" data-enter><h1 class="t-headline-s grow">Hacktoberfest 2026 Kickoff</h1></div><div class="row wrap" data-enter>${ch("Sat 10 Oct · 11:00 AM","","schedule")}${ch("Seminar Hall","","location_on")}<span data-on="not-registered" class="m3-chip-assist blue">146 of 150</span><span data-on="registered ticket" hidden class="m3-chip-assist green">147 of 150</span></div>
+<div class="m3-card-outlined" data-enter><div class="sec">About</div><div class="t-body-m t2">Kick off the open-source month with a talk, a live Git demo and your first issue claim.</div></div>
+<div class="m3-card-outlined" data-enter><div class="sec">Speakers</div>${[["Rohan Gupta","Organizer"],["Dr. Neha Agarwal","Mentor"]].map((s,i)=>row(av(s[0],i),s[0],s[1])).join("")}</div>
+<div class="m3-card-outlined" data-enter><div class="sec">What you'll learn</div>${["Fork, branch and open a pull request","Pick a beginner issue","How points reach the Board"].map(t=>`<div class="row">${I("check_circle")}<span class="t-body-m">${t}</span></div>`).join("")}</div><div style="height:72px"></div>`,"",
+`<div class="glass row" style="position:absolute;left:20px;right:20px;bottom:28px;border-radius:var(--shape-full);padding:8px;z-index:4"><button class="m3-filled-button sm m3-press grow" data-on="not-registered">Register</button><button class="m3-filled-button sm m3-press grow" data-on="registered ticket" hidden>${I("qr_code_2")}View ticket</button>${ib("event","Add to calendar")}${ib("ios_share","Share")}</div>
+<div class="sheet" data-on="ticket" hidden style="align-items:center"><div class="row"><span class="shape green" style="--sz:40px">${I("check")}</span><div class="t-title-l">You're registered</div></div><div class="m3-card-outlined" style="align-items:center;width:100%;border-style:dashed"><div class="m3-card-outlined" style="padding:12px">${qr()}</div><div class="t-title-m">Aarav Sharma</div><div class="t-mono t2">2501640100567 · HF26-KICK-0567</div></div><div class="row" style="width:100%"><button class="m3-filled-button sm m3-press grow">Save ticket</button>${link("Add to calendar")}</div></div>`));
+/* 08 Projects */
+T("projects",sc(bar("Projects","",""),`<div class="m3-button-group" data-enter>${["All","Web","Android","Docs"].map((c,i)=>`<button aria-pressed="${!i}">${c}</button>`).join("")}</div>${PR.map(pcard).join("")}`,nav("m","Projects")));
+/* 09 Project detail */
+const mesh=`<div class="mesh" aria-hidden="true"><i style="--c:var(--brand-blue);--d:47s;--x:60px;--y:40px;left:-30px;top:-40px"></i><i style="--c:var(--brand-green);--d:53s;--x:-50px;--y:30px;right:-20px;top:20px"></i><i style="--c:var(--brand-yellow);--d:41s;--x:40px;--y:-30px;left:80px;top:90px"></i><i style="--c:var(--brand-red);--d:59s;--x:-40px;--y:-20px;right:60px;top:110px"></i></div>`;
+T("project-detail",sc(bar("","",back),`${mesh}<div class="col" data-enter style="position:relative;padding-top:24px"><div class="m3-tile" style="width:72px;height:72px;--c1:var(--brand-blue);--c2:var(--brand-green)">${I("web")}</div><h1 class="t-display-s t-hero">gdgoc-web-app</h1><div class="row">${ch("Next.js","blue")}${ch("TypeScript","blue")}${ch("Tailwind","blue")}<button class="glyph m3-press" aria-label="Open on GitHub">${I("link")}</button></div></div>
+<div class="row" style="gap:8px">${[[12,"open issues","blue","bug_report"],[41,"merged PRs","green","merge"],[27,"contributors","yellow","groups"]].map(s=>`<div class="m3-card-outlined tint ${s[2]} grow" style="padding:12px;gap:4px" data-enter><span class="shape" style="--sz:32px;background:var(--surface)">${I(s[3])}</span><div class="t-headline-m">${s[0]}</div><div class="t-label-s">${s[1]}</div></div>`).join("")}</div>
+${sec("Getting started")}<div class="col" data-enter style="gap:0">${steps.map((s,i)=>`<div class="row" style="align-items:flex-start;padding-bottom:12px"><span class="m3-avatar sm" style="background:var(--primary);color:var(--on-primary)">${i+1}</span><div><div class="t-title-m">${s[0]}</div><div class="t-body-s t2">${s[1]}</div></div></div>`).join("")}</div>
+<div data-on="core-team" hidden class="col">${sec("Awaiting review",ch("4","yellow"))}${prs.map(prrow).join("")}</div>
+${sec("Open issues")}${iss.map(s=>row(`<span class="t-mono t2">${s[0]}</span>`,s[1],ch(s[2],s[3]).replace("m3-chip-assist","m3-chip-assist")+"",`<div class="stack">${s[4].map((n,i)=>av(n,i,"sm")).join("")}</div>`)).join("")}
+<button class="m3-filled-button m3-press wide" data-on="member">Join project</button><button class="m3-filled-button m3-press wide" data-on="core-team" hidden>Open review queue</button>`));
+/* 10 Learn */
+T("learn",sc(bar("Learn","",""),`<div class="row wrap" data-enter>${["Paths","Resources","Sessions"].map((c,i)=>`<button class="m3-chip-filter" aria-pressed="${!i}">${c}</button>`).join("")}</div>
+${[["Android with Kotlin","android","green",6,10,24,"Continue"],["Web with Next.js","web","blue",3,8,18,"Continue"],["ML with TensorFlow","neurology","red",0,9,30,"Start"],["Cloud with GCP","cloud","yellow",2,6,14,"Continue"],["Flutter Cross-Platform","flutter_dash","blue",0,8,20,"Start"]].map(p=>`<div class="m3-card-outlined" data-enter><div class="row"><span class="shape ${p[2]}" style="--sz:44px">${I(p[1])}</span><div class="grow"><div class="t-title-m">${p[0]}</div><div class="t-body-s t2">${p[3]} of ${p[4]} modules · ${p[5]} hours</div></div><button class="m3-filled-button sm m3-press">${p[6]}</button></div><div class="m3-linear-progress" style="--v:${p[3]/p[4]*100}%"><b></b></div></div>`).join("")}
+${sec("Past sessions")}${row(I("play_circle"),"Git and GitHub basics","Study jam · 18 Sep · 1h 12m")}${row(I("play_circle"),"Intro to Jetpack Compose","Workshop · 25 Sep · 58m")}`,nav("m","Learn")));
+/* 11 Profile */
+T("profile",sc(bar("Profile","",""),`<div class="col" style="align-items:center;text-align:center" data-enter>${av("Aarav Sharma",0,"lg")}<h1 class="t-headline-m">Aarav Sharma</h1><div class="t-mono t2">2501640100567</div><div class="row">${I("link")}<span class="t-body-m">@aarav-sharma</span></div><div class="row"><span data-on="own">${"<button class='m3-outlined-button m3-press'>Edit profile</button>"}</span><span data-on="mentor-view" hidden class="row">${ch("Mentor view","blue")}<button class="m3-outlined-button m3-press">View on GitHub</button></span></div></div>
+<div class="g2" style="grid-template-columns:repeat(3,1fr)" data-enter>${[[3,"Merged"],[1,"Open PRs"],["#14","Rank"]].map(s=>`<div class="m3-card-outlined" style="padding:12px;align-items:center;gap:0"><div class="t-headline-s">${s[0]}</div><div class="t-label-s t2">${s[1]}</div></div>`).join("")}</div>
+<div class="row wrap" data-enter>${ch("First PR","yellow","workspace_premium")}${ch("Event Regular","blue","event")}${ch("Android","","code")}${ch("Next.js","","code")}</div>
+${sec("Contribution timeline")}${[["Claimed #236","Paginate the attendee list","5 Oct"],["PR opened","feat: paginate the attendee list","4 Oct"],["Changes requested","feat: paginate the attendee list","5 Oct"],["Counted on the Board","3 merged PRs so far","3 Oct"]].map(t=>row(`<span class="shape blue" style="--sz:32px">${I("commit")}</span>`,t[0],t[1]+" · "+t[2])).join("")}
+<div data-on="own" class="col"><div class="m3-card-outlined" data-enter><div class="row">${I("confirmation_number")}<div class="grow"><div class="t-title-m">Hacktoberfest 2026 Kickoff</div><div class="t-mono t2">HF26-KICK-0567</div></div>${I("qr_code_2")}</div></div>${row(I("notifications"),"Notifications","On")}${row(I("lock"),"Privacy","Profile visible to mentors")}${row(I("logout"),"Sign out","")}</div>`,nav("m","Profile")));
+/* 12 Dashboard */
+T("dashboard",sc(`<div class="m3-top-app-bar">${LOGO}<h2>Dashboard</h2>${bell}</div>`,`<div class="g2">${kpi(5,"Upcoming events","blue","event")}${kpi(163,"Registered students","green","how_to_reg")}${kpi(3,"Projects","yellow","code")}${kpi(87,"Merged PRs","red","merge")}</div>
+${sec("Needs your attention")}${[["8 PRs awaiting review","Across 3 projects","rate_review","yellow"],["Kickoff is 3 seats from full","147 of 150 registered","event_seat","blue"],["Workshop waitlist is open","Intro to Flutter · 100 of 100","hourglass_top","green"]].map(a=>row(`<span class="shape ${a[3]}" style="--sz:40px">${I(a[2])}</span>`,a[0],a[1],I("chevron_right"))).join("")}
+${board}<div class="m3-card-outlined" data-enter><div class="row"><div class="stack">${["Rohan Gupta","Sanya Khan","Vivek Yadav"].map((n,i)=>av(n,i)).join("")}</div><div class="grow"><div class="t-title-m">Team</div><div class="t-body-s t2">Rohan Gupta and 11 others</div></div></div></div>`,nav("c","Dashboard"),`<button class="m3-fab-primary m3-press" aria-label="Create">${I("add")}New</button>`));
+/* 13 Manage events */
+T("manage-events",sc(bar("Events","",""),`<div class="m3-button-group" data-enter><button aria-pressed="true">Upcoming</button><button aria-pressed="false">Past</button></div>${EV.slice(0,5).map((e,i)=>`<div class="m3-card-outlined" data-enter><div class="row"><div class="grow"><div class="t-title-m">${i?"":`<span data-on="live-now-preview" hidden>${LIVE}</span>`}${e[0]}</div><div class="t-body-s t2">${e[1]}</div></div><span data-on="live-now-preview" hidden>${i===0?ch("Live now","red","fiber_manual_record"):""}</span>${ib("edit","Edit event")}</div><div class="m3-linear-progress" style="--v:${+e[2].split(" of ")[0]/+e[2].split(" of ")[1]*100}%;--c:var(--brand-${e[4]==="yellow"?"yellow":"blue"})"><b></b></div><div class="t-mono t2">${e[2].replace(" of "," / ")} registered</div></div>`).join("")}`,nav("c","Events"),`<button class="m3-fab-primary m3-press" aria-label="New event">${I("add")}New event</button>`));
+/* 14 Review queue */
+T("review-queue",sc(bar("Review queue","",back),`<div class="row wrap" data-enter>${ch("GDGoC Web App","blue")}${ch("4 awaiting","yellow")}</div>${prs.map(prrow).join("")}`,nav("c","Projects")));
+/* 15 Members */
+T("members",sc(bar("Members","",""),`<div class="row wrap" data-enter>${["Active","All roles","Department"].map((c,i)=>`<button class="m3-chip-filter" aria-pressed="${!i}">${c}</button>`).join("")}</div><div class="t-body-m t2" data-enter>214 verified members</div>${P.slice(0,8).map((p,i)=>row(av(p[0],i),p[0],`<span class="t-mono">${roll(i)}</span>`,`${ch(["CS","IT","ECE","CS"][i%4],"blue")}<span class="t-title-m t-mono">${p[1]}</span>`)).join("")}`,nav("c","Members")));
+/* 16 Me */
+T("me",sc(bar("Me","",""),`<div class="col" style="align-items:center;text-align:center" data-enter>${av("Rohan Gupta",3,"lg")}<h1 class="t-headline-m">Rohan Gupta</h1>${ch("Organizer","blue","shield_person")}</div>${row(I("manage_accounts"),"Chapter settings","Roles, events, projects",I("chevron_right"))}${row(I("notifications"),"Notifications","On",I("chevron_right"))}${row(I("lock"),"Privacy","Mentors see active contributors",I("chevron_right"))}${row(I("logout"),"Sign out","")}`,nav("c","Me")));
+/* 17 Overview */
+T("overview",sc(bar("Overview",`<button class="m3-text-button m3-press">Export report</button>`,""),`<div class="g2">${kpi(214,"Students","blue","school")}${kpi(61,"Active contributors","green","code")}${kpi(5,"Upcoming events","yellow","event")}${kpi("0.41","Average merges","red","merge")}</div>
+<div class="m3-card-outlined" data-enter><div class="sec">Department participation</div>${[["CS",33],["IT",16],["ECE",8],["Other",4]].map(d=>`<div class="row"><span class="t-label-m" style="width:44px">${d[0]}</span><div class="m3-linear-progress grow" style="--v:${d[1]/33*100}%"><b></b></div><span class="t-mono">${d[1]}</span></div>`).join("")}</div>${board}
+<div class="sheet" data-on="export-sheet" hidden><div class="t-title-l">Export report</div>${row(I("picture_as_pdf"),"PDF","Chapter summary")}${row(I("table_chart"),"CSV","Raw numbers")}</div>`,nav("t","Overview")));
+/* 18 Students */
+T("students",sc(bar("Students","",""),`<div class="row wrap" data-enter><button class="m3-chip-filter" aria-pressed="true">Active contributors</button><button class="m3-chip-filter" aria-pressed="false">All students</button></div><div class="t-body-m t2" data-enter data-on="active-contributors">61 active of 214</div><div class="t-body-m t2" data-on="all-students" hidden>214 students</div><div class="col" data-on="active-contributors" style="gap:0">${[[0,9],[1,8],[2,7],[3,6],[4,5],[5,5],[6,4],[13,3]].map(([i,m])=>row(av(P[i][0],i),P[i][0],`<span class="t-mono">${roll(i)}</span>`,`${ch(["CS","IT","ECE","CS"][i%4],"blue")}<span class="t-headline-s t-mono">${m}</span>`)).join("")}</div><div class="col all" data-on="all-students" hidden style="gap:0"></div>`,nav("t","Students")));
+/* 19 Insights */
+T("insights",sc(bar("Insights",`<button class="m3-text-button m3-press">Export report</button>`,""),`<div class="m3-card-outlined hero" data-enter><div class="row"><div class="grow"><div class="t-label-m t2">Engagement rate</div><div class="t-display-s">76%</div></div>${ch("163 of 214 registered","green")}</div><svg viewBox="0 0 300 70" width="100%" role="img" aria-label="Growth over the last six months"><polyline fill="none" stroke="var(--brand-blue)" stroke-width="3" stroke-linecap="round" points="0,60 60,52 120,44 180,30 240,18 300,8"/></svg></div>
+<div class="m3-card-outlined" data-enter><div class="sec">Skills across members</div>${[["Web",71],["Android",54],["ML",32],["Cloud",28]].map(s=>`<div class="row"><span class="t-label-m" style="width:60px">${s[0]}</span><div class="m3-linear-progress grow" style="--v:${s[1]}%"><b></b></div></div>`).join("")}</div>
+<div class="m3-card-outlined" data-enter><div class="sec">Project momentum</div>${PR.map(p=>row(`<div class="m3-tile" style="--c1:var(--brand-${p[3]});--c2:var(--brand-${p[4]})">${I(p[2])}</div>`,p[0],`${p[6]} merged PRs · ${p[7]} contributors`)).join("")}</div>
+<div class="sheet" data-on="export-sheet" hidden><div class="t-title-l">Export report</div>${row(I("picture_as_pdf"),"PDF","Insights summary")}${row(I("table_chart"),"CSV","Raw numbers")}</div>`,nav("t","Insights")));
+/* 20-22 Shared */
+T("loading",sc(bar("Projects","",""),`${[0,1,2].map(()=>`<div class="m3-card-outlined skel"><div class="row"><div class="m3-tile" style="background:var(--surface-alt)"></div><div class="grow col"><div style="height:16px;width:60%;border-radius:8px;background:var(--surface-alt)"></div><div style="height:12px;width:80%;border-radius:8px;background:var(--surface-alt)"></div></div></div><div style="height:12px;width:70%;border-radius:8px;background:var(--surface-alt)"></div></div>`).join("")}`,nav("m","Projects")));
+T("empty",sc(bar("Board","",""),`<div class="grow"></div><div class="col" style="align-items:center;text-align:center"><span class="shape blue pop" style="--sz:112px">${I("emoji_events")}</span><h1 class="t-headline-s">No contributions yet</h1><p class="t-body-m t2">Points fill the Board as people attend events, finish modules and merge PRs. Check back soon.</p><button class="m3-text-button m3-press">Browse projects</button></div><div class="grow"></div>`,nav("m","Home")));
+T("error",sc(bar("Events","",""),`<div class="grow" data-on="default retrying"></div><div class="col" data-on="default retrying" style="align-items:center;text-align:center"><span class="shape red pop" style="--sz:112px">${I("cloud_off")}</span><h1 class="t-headline-s">Couldn't load events</h1><p class="t-body-m t2">Check your connection and try again.</p><button class="m3-outlined-button m3-press" data-on="default">Retry</button><span data-on="retrying" hidden class="load" style="background:var(--primary)"></span></div><div class="grow" data-on="default retrying"></div><div class="col" data-on="loaded" hidden>${EV.slice(0,3).map(e=>`<div class="m3-card-outlined"><div class="row"><div class="grow"><div class="t-title-m">${e[0]}</div><div class="t-body-s t2">${e[1]}</div></div>${ch(e[3],e[4])}</div></div>`).join("")}</div>`,nav("m","Events")));
+/* motion helpers: loader, skeleton pulse, pop-in, state handling, deck gestures */
+document.head.insertAdjacentHTML("beforeend",`<style>.load{width:24px;height:24px;background:var(--on-primary);display:inline-block;animation:morph 1.4s linear infinite}@keyframes morph{0%,100%{border-radius:50%;transform:rotate(0)}33%{border-radius:30%;transform:rotate(120deg)}66%{border-radius:12%;transform:rotate(240deg)}}.skel{animation:pulse 1.4s ease-in-out infinite}@keyframes pulse{50%{opacity:.55}}.pop{transform:scale(0)}.is-played .pop{transform:scale(1);transition:transform var(--m3-spatial-slow-dur) var(--m3-spatial-slow)}@media (prefers-reduced-motion:reduce){.load,.skel{animation:none}.pop{transform:none}}</style>`);
+const ap=f=>f.querySelectorAll("[data-on]").forEach(e=>e.hidden=!e.dataset.on.split(" ").includes(f.dataset.state));
+function goTo(deck,i){const cs=[...deck.querySelectorAll(".dk")];i=Math.max(0,Math.min(cs.length-1,i));deck.dataset.i=i;cs.forEach((c,j)=>{const o=j-i;c.style.setProperty("--o",o);c.style.setProperty("--s",o?.94:1);c.style.setProperty("--op",Math.abs(o)>1?0:1);c.classList.toggle("f",!o)});const p=deck.parentElement;p.querySelectorAll(".dots button").forEach((b,j)=>b.setAttribute("aria-current",j===i));deck.querySelector(".cnt").textContent=`${i+1} of ${cs.length}`;deck.querySelector("[data-deck='-1']").hidden=!i;deck.querySelector("[data-deck='1']").hidden=i===cs.length-1}
+addEventListener("DOMContentLoaded",()=>document.querySelectorAll(".m3-phone").forEach(f=>{ap(f);const d=f.querySelector(".deck");if(d)goTo(d,0)}));
+document.addEventListener("gdg:state",e=>{const f=e.target,id=f.closest(".phone-cell").dataset.screen;ap(f);
+ if(id==="landing"){const s=f.querySelector(".sb"),to={"scroll-top":0,"scroll-middle":s.scrollHeight*.4,"scroll-bottom":s.scrollHeight,"member":s.scrollHeight*.4};GDG.spring("spatial-default",{from:s.scrollTop,to:to[e.detail],update:p=>s.scrollTop=p})}
+ if(id==="events")goTo(f.querySelector(".deck"),e.detail==="past-event"?5:0)});
+document.addEventListener("click",e=>{const d=e.target.closest("[data-deck]"),g=e.target.closest("[data-go]");if(d){const k=d.closest(".deck");goTo(k,+k.dataset.i+ +d.dataset.deck)}if(g){const k=g.closest(".sb").querySelector(".deck");goTo(k,+g.dataset.go)}});
+let dr=null;
+document.addEventListener("pointerdown",e=>{const d=e.target.closest(".deck .dk.f");if(!d||e.target.closest("button"))return;dr={d,x:e.clientX,lx:e.clientX,lt:performance.now(),dx:0,v:0};d.classList.add("dragging");d.setPointerCapture(e.pointerId)});
+document.addEventListener("pointermove",e=>{if(!dr)return;const n=performance.now();dr.dx=e.clientX-dr.x;dr.v=(e.clientX-dr.lx)/(n-dr.lt||1);dr.lx=e.clientX;dr.lt=n;dr.d.style.transform=`translateX(${dr.dx}px) rotate(${Math.max(-6,Math.min(6,dr.dx/390*6*2.6))}deg)`});
+document.addEventListener("pointerup",()=>{if(!dr)return;const{d,dx,v}=dr;dr=null;d.classList.remove("dragging");const k=d.parentElement;
+ if(Math.abs(dx)>390*.35||Math.abs(v)>.5){d.style.transform="";goTo(k,+k.dataset.i+(dx<0?1:-1))}
+ else GDG.spring("spatial-default",{from:dx,to:0,v:v*1000,update:p=>d.style.transform=`translateX(${p}px) rotate(${p/390*6*2.6}deg)`,done:()=>d.style.transform=""})});
+</script>
+</div>
+
+<script>
+/* ===== SPRING ENGINE: closed-form damped oscillator, mass 1, normalized displacement 0..1 ===== */
+(()=>{
+const RM=matchMedia("(prefers-reduced-motion: reduce)");
+const TOK={"spatial-fast":[.6,800],"spatial-default":[.8,380],"spatial-slow":[.8,200],"effects-fast":[1,3800],"effects-default":[1,1600],"effects-slow":[1,800]};
+const pos=(z,k,t)=>{const w=Math.sqrt(k);if(z<1){const d=w*Math.sqrt(1-z*z);return 1-Math.exp(-z*w*t)*(Math.cos(d*t)+z*w/d*Math.sin(d*t))}return 1-Math.exp(-w*t)*(1+w*t)};
+const settle=(z,k)=>{let last=0;for(let t=0;t<4;t+=.002)if(Math.abs(pos(z,k,t)-1)>.002)last=t;return last+.002};
+const info={};
+function build(){
+  const root=document.documentElement.style,lin=CSS.supports("transition-timing-function","linear(0,1)");
+  for(const[n,[z,k]]of Object.entries(TOK)){
+    const T=settle(z,k),N=48,pts=[];
+    for(let i=0;i<=N;i++)pts.push(+pos(z,k,T*i/N).toFixed(4));
+    pts[N]=1;
+    const fb=z<1?`cubic-bezier(.34,${(1+(1-z)*.9).toFixed(2)},.64,1)`:"cubic-bezier(.2,0,0,1)"; /* overshoot fallback where linear() is unsupported */
+    root.setProperty(`--m3-${n}`,lin?`linear(${pts.join(",")})`:fb);
+    root.setProperty(`--m3-${n}-dur`,RM.matches?"1ms":Math.round(T*1000)+"ms");
+    info[n]={z,k,T,pts};
+  }
+}
+/* real-time spring for gestures: sub-steps of 1/120 s, force = -k(x - target) - c*v, c = 2*zeta*sqrt(k), starts from release velocity */
+function spring(name,o){
+  const[z,k]=TOK[name],{from=0,to=1,v=0,update,done}=o;
+  if(RM.matches){update(to);done&&done();return{stop(){}}}
+  const c=2*z*Math.sqrt(k),h=1/120,sc=Math.max(1,Math.abs(to-from));
+  let p=from,vel=v,last=performance.now(),acc=0,raf,dead=false;
+  const step=now=>{
+    if(dead)return;
+    acc+=Math.min((now-last)/1000,.05);last=now;
+    while(acc>=h){vel+=(-k*(p-to)-c*vel)*h;p+=vel*h;acc-=h}
+    update(p);
+    if(Math.abs(p-to)<.0005*sc&&Math.abs(vel)<.01*sc){update(to);done&&done();return}
+    raf=requestAnimationFrame(step);
+  };
+  raf=requestAnimationFrame(step);
+  return{stop(){dead=true;cancelAnimationFrame(raf)}};
+}
+build();RM.addEventListener("change",build);
+window.GDG={TOK,info,spring,pos,settle,RM};
+})();
+
+/* ===== SHELL: 22 frames, Solo view, state chips, replay ===== */
+(()=>{
+const SCREENS=[ /* slug, name, group, state chips (first is default) */
+["landing","Landing","Public",["Scroll top","Scroll middle","Scroll bottom","Member"]],
+["join-verify","Join and verify","Public",[]],
+["otp","OTP","Public",["Default","Verifying"]],
+["role-router","Role router","Public",["Member","Core Team","Mentor"]],
+["home","Home","Member",["Default","Board expanded"]],
+["events","Events","Member",["Deck","Past event"]],
+["event-detail","Event detail","Member",["Not registered","Registered","Ticket"]],
+["projects","Projects","Member",[]],
+["project-detail","Project detail","Member",["Member","Core Team"]],
+["learn","Learn","Member",[]],
+["profile","Profile","Member",["Own","Mentor view"]],
+["dashboard","Dashboard","Core Team",["Default","Board expanded"]],
+["manage-events","Manage events","Core Team",["Default","Live now preview"]],
+["review-queue","Review queue","Core Team",[]],
+["members","Members","Core Team",[]],
+["me","Me","Core Team",[]],
+["overview","Overview","Mentor",["Default","Board expanded","Export sheet"]],
+["students","Students","Mentor",["Active contributors","All students"]],
+["insights","Insights","Mentor",["Default","Export sheet"]],
+["loading","Loading","Shared",[]],
+["empty","Empty","Shared",[]],
+["error","Error","Shared",["Default","Retrying"]]
+];
+const slug=s=>s.toLowerCase().replace(/[^a-z0-9]+/g,"-");
+const grid=document.getElementById("grid"),counter=document.getElementById("counter");
+let cur=0;
+SCREENS.forEach(([id,name,group,states],i)=>{
+  const n=String(i+1).padStart(2,"0"),cell=document.createElement("section");
+  cell.className="phone-cell";cell.dataset.screen=id;cell.dataset.index=i;cell.setAttribute("aria-label",`${n} ${name}`);
+  cell.innerHTML=`<button class="cell-label t-mono" data-act="solo" aria-label="Open ${name} in Solo view">${n} · ${name.toUpperCase()}</button>
+  <div class="cell-controls" role="group" aria-label="${name} states">${states.map((s,j)=>`<button class="m3-chip-filter" data-state="${slug(s)}" aria-pressed="${j===0}">${s}</button>`).join("")}<button class="m3-text-button" data-act="replay"><span class="ms" aria-hidden="true">replay</span>Replay motion</button></div>
+  <div class="m3-phone" data-group="${group}" data-state="${slug(states[0]||"default")}">
+    <div class="m3-status-bar" aria-hidden="true"><span>9:41</span><span class="status-icons"><span class="ms is-filled">signal_cellular_alt</span><span class="ms is-filled">wifi</span><span class="ms is-filled">battery_full</span></span></div>
+    <div class="m3-screen"></div><div class="m3-home-indicator" aria-hidden="true"></div></div>`;
+  const scr=cell.querySelector(".m3-screen"),tpl=document.querySelector(`template[data-screen="${id}"]`);
+  if(tpl)scr.append(tpl.content.cloneNode(true));
+  else scr.innerHTML=`<div class="m3-screen-pending t-mono">${n} · ${name}<br>content arrives in a later pass</div>`;
+  grid.append(cell);
+});
+const cells=[...grid.children];
+function replay(cell){
+  const f=cell.querySelector(".m3-phone");
+  f.classList.remove("is-played");
+  f.querySelectorAll("[data-enter]").forEach((el,i)=>el.style.setProperty("--i",Math.min(i,5)));
+  void f.offsetWidth;
+  requestAnimationFrame(()=>f.classList.add("is-played"));
+}
+function show(i){
+  cur=(i+cells.length)%cells.length;
+  cells.forEach((c,j)=>c.classList.toggle("is-current",j===cur));
+  counter.textContent=`${String(cur+1).padStart(2,"0")} / ${cells.length}`;
+  replay(cells[cur]);
+}
+function setView(v,i){
+  document.body.dataset.view=v;
+  document.getElementById("v-grid").setAttribute("aria-pressed",v==="grid");
+  document.getElementById("v-solo").setAttribute("aria-pressed",v==="solo");
+  ["solo-prev","solo-next"].forEach(id=>document.getElementById(id).hidden=v!=="solo");
+  if(v==="solo")show(i??cur);
+  else{counter.textContent=`${cells.length} screens`;cells[cur].scrollIntoView({block:"center"})}
+}
+grid.addEventListener("click",e=>{
+  const b=e.target.closest("button");if(!b)return;
+  const cell=b.closest(".phone-cell"),act=b.dataset.act;
+  if(act==="solo")setView("solo",+cell.dataset.index);
+  else if(act==="replay")replay(cell);
+  else if(b.dataset.state){ /* state chips: screens style themselves from [data-state] and may listen for gdg:state */
+    b.parentElement.querySelectorAll("[data-state]").forEach(x=>x.setAttribute("aria-pressed",x===b));
+    const f=cell.querySelector(".m3-phone");f.dataset.state=b.dataset.state;
+    f.dispatchEvent(new CustomEvent("gdg:state",{detail:b.dataset.state,bubbles:true}));
+  }
+});
+document.getElementById("v-grid").onclick=()=>setView("grid");
+document.getElementById("v-solo").onclick=()=>setView("solo");
+document.getElementById("solo-prev").onclick=()=>show(cur-1);
+document.getElementById("solo-next").onclick=()=>show(cur+1);
+addEventListener("keydown",e=>{
+  if(e.target.closest("input,textarea,[contenteditable]")||document.body.dataset.view!=="solo")return;
+  if(e.key==="ArrowRight")show(cur+1);
+  else if(e.key==="ArrowLeft")show(cur-1);
+  else if(e.key==="Escape")setView("grid");
+  else if(e.key.toLowerCase()==="r")replay(cells[cur]);
+});
+/* each frame plays its entrance once when first scrolled into view */
+const io=new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){replay(en.target.closest(".phone-cell"));io.unobserve(en.target)}}),{threshold:.3});
+cells.forEach(c=>io.observe(c.querySelector(".m3-phone")));
+window.GDG.shell={SCREENS,cells,replay,show,setView};
+})();
+</script>
+<script>
+/* ===== ADDITIONS: design system, flows, kill feed, counters, sticky bar, intro, state wiring ===== */
+(()=>{
+const {RM,TOK,info,pos}=GDG,$=(q,r=document)=>r.querySelector(q),landing=$('.phone-cell[data-screen="landing"]'),sb=$(".sb",landing);
+
+/* kill feed: linear ambient marquee at 40dp/s; tap pauses for 3 s; reduced motion shows one static card */
+const fd=$(".feed",landing),tr=$(".feed-track",fd),SET=FEED.length*232;
+let x=0,hold=false,ht,last=performance.now();
+const stat=()=>{fd.classList.toggle("is-static",RM.matches);if(RM.matches){x=0;tr.style.transform="none"}};
+stat();RM.addEventListener("change",stat);
+const pause=()=>{hold=true;clearTimeout(ht);ht=setTimeout(()=>hold=false,3000)};
+fd.addEventListener("pointerdown",pause);fd.addEventListener("focusin",pause);
+requestAnimationFrame(function f(t){const dt=Math.min((t-last)/1000,.1);last=t;
+ if(!hold&&!RM.matches&&!document.hidden){x=(x-40*dt)%SET;tr.style.transform=`translateX(${x}px)`}
+ requestAnimationFrame(f)});
+
+/* counters: spatial-default curve stretched to 800 ms, fired when the strip is half visible */
+const cn=[...landing.querySelectorAll("[data-count]")],lv=$(".sr",landing),[z,k]=TOK["spatial-default"],Ts=info["spatial-default"].T;
+const num=(e,v)=>e.textContent=Math.round(v).toLocaleString();
+const say=()=>lv.textContent=cn.map(e=>`${(+e.dataset.count).toLocaleString()} ${e.nextElementSibling.textContent}`).join(", ");
+say();let raf;
+new IntersectionObserver(([en])=>{cancelAnimationFrame(raf);
+ if(RM.matches){cn.forEach(e=>{num(e,e.dataset.count);e.removeAttribute("aria-hidden")});return}
+ cn.forEach(e=>e.setAttribute("aria-hidden","true"));
+ if(!en.isIntersecting){cn.forEach(e=>num(e,0));return}
+ const t0=performance.now();
+ raf=requestAnimationFrame(function s(n){const u=Math.min((n-t0)/800,1),p=u<1?Math.min(1,pos(z,k,Ts*u)):1;
+  cn.forEach(e=>num(e,p*e.dataset.count));
+  if(u<1)raf=requestAnimationFrame(s);else{cn.forEach(e=>e.removeAttribute("aria-hidden"));lv.textContent="";setTimeout(say,60)}})
+},{threshold:.5}).observe(cn[0].closest(".g2"));
+
+/* sticky bar: slides in once the hero has scrolled out of the screen */
+const bar=$(".sbar",landing);
+new IntersectionObserver(([en])=>bar.classList.toggle("on",!en.isIntersecting),{root:sb,threshold:0}).observe($("[data-hero]",landing));
+
+/* state chips that need more than [data-on] */
+const FN=["Aarav","Diya","Kabir","Ira","Reyansh","Anvi","Vihaan","Myra","Arjun","Saanvi","Krish","Navya","Dev","Tara","Yash","Kiara"],LN=["Sharma","Verma","Singh","Gupta","Mishra","Yadav","Tiwari","Pandey","Joshi","Khan","Saxena","Dwivedi","Agarwal","Chauhan","Srivastava","Tripathi"];
+document.addEventListener("gdg:state",e=>{const f=e.target,id=f.closest(".phone-cell").dataset.screen;
+ if(id==="students"&&e.detail==="all-students"){const l=$(".all",f);if(!l.firstChild)l.innerHTML=Array.from({length:214},(_,i)=>{const n=i<14?P[i][0]:`${FN[i%16]} ${LN[(i*7+(i>>4))%16]}`;return row(av(n,i),n,`<span class="t-mono">${roll(i)}</span>`,`${ch(["CS","IT","ECE","CS"][i%4],"blue")}<span class="t-headline-s t-mono">${i<61?Math.max(1,9-(i>>3)):0}</span>`)}).join("")}
+ if(id==="error"&&e.detail==="retrying")setTimeout(()=>{if(f.dataset.state==="retrying"){f.dataset.state="loaded";ap(f)}},1500)});
+document.addEventListener("click",e=>{const b=e.target.closest('.phone-cell[data-screen="error"] [data-on="default"]');if(b)b.closest(".phone-cell").querySelector('[data-state="retrying"]').click()});
+
+/* design system reference, read live from :root and the engine */
+const cs=getComputedStyle(document.documentElement),tk=n=>cs.getPropertyValue(n).trim(),nm=q=>q.replace("-"," ").replace(/\b\w/g,c=>c.toUpperCase());
+const cap=(h,t)=>`<div class="col" style="align-items:flex-start;gap:var(--sp-2)">${h}<span class="t-label-s t3">${t}</span></div>`;
+const blk=(t,b)=>`<div class="blk"><h3 class="t-title-l">${t}</h3>${b}</div>`;
+const SW=[["Canvas",["--canvas"]],["Surface",["--surface","--surface-alt","--outline"]],["On-surface",["--on-surface","--on-surface-2","--on-surface-3"]],["Brand",["--primary","--primary-press","--on-primary","--brand-blue","--brand-red","--brand-yellow","--brand-green"]],["Tints",["--tint-blue","--tint-red","--tint-yellow","--tint-green"]],["On-tint text",["--on-tint-blue","--on-tint-green","--on-tint-red","--on-tint-amber"]]];
+const TY=["display-m","display-s","headline-m","headline-s","title-l","title-m","title-s","body-l","body-m","body-s","label-l","label-m","label-s","mono"];
+const tg=`onclick="this.setAttribute('aria-pressed',this.getAttribute('aria-pressed')!=='true')"`;
+$("#design-system").innerHTML=`<div class="ds"><h2 class="t-headline-m">Design system</h2>
+${blk("Color tokens",SW.map(([g,ts])=>`<div class="col"><span class="t-label-l t2">${g}</span><div class="row wrap" style="align-items:flex-start">${ts.map(n=>`<div class="sw"><i style="background:var(${n})"></i><span class="t-label-s">${n.slice(2)}</span><span class="t-mono t3">${tk(n)}</span></div>`).join("")}</div></div>`).join(""))}
+${blk("Type scale",TY.map(q=>`<div class="row"><span class="t-mono t3" style="width:220px;flex:none">${nm(q)} · ${tk("--type-"+q).replace(/ var\(.*$/,"")}</span><span class="t-${q}">Learn, build and ship</span></div>`).join(""))}
+${blk("Buttons",`<div class="row wrap" style="align-items:flex-end;gap:var(--sp-6)">${cap('<button class="m3-filled-button m3-press">Filled</button>',"m3-filled-button")}${cap('<button class="m3-outlined-button m3-press">Outlined</button>',"m3-outlined-button")}${cap('<button class="m3-text-button m3-press">Text</button>',"m3-text-button")}${cap(ib("favorite","Favorite"),"m3-icon-button")}${cap(`<button class="m3-fab-primary m3-press" style="position:static">${I("add")}New</button>`,"m3-fab-primary")}</div>`)}
+${blk("Press behavior",`<div class="row wrap" style="gap:var(--sp-6)"><button class="m3-filled-button m3-press">Press me</button><p class="t-body-m t2" style="max-width:420px">Hold it down: the button scales to .97 while its corners tighten to 12dp, on spatial-fast with effects-fast.</p></div>`)}
+${blk("Chips",`<div class="row wrap" style="align-items:flex-start;gap:var(--sp-6)">${cap(`<div class="row"><button class="m3-chip-filter" aria-pressed="true" ${tg}>Selected</button><button class="m3-chip-filter" aria-pressed="false" ${tg}>Unselected</button></div>`,"m3-chip-filter")}${cap(`<div class="row">${ch("Seminar Hall","","location_on")}${ch("Add to calendar","","event")}</div>`,"m3-chip-assist")}${cap(`<div class="row">${ch("Open","blue")}${ch("Registered","green","check")}${ch("Waitlist","yellow")}${ch("Live now","red","fiber_manual_record")}</div>`,"status tones: blue, green, yellow, red")}</div>`)}
+${blk("Cards",`<div class="row wrap" style="align-items:stretch;gap:var(--sp-4)"><div class="m3-card-outlined" style="width:240px"><div class="t-title-m">Outlined</div><div class="t-body-s t2">16dp corners, 1dp outline</div></div><div class="m3-card-outlined tint blue" style="width:240px"><div class="t-title-m">Tinted</div><div class="t-body-s">Tint fill, no outline</div></div><div class="m3-card-outlined hero" style="width:240px"><div class="t-title-m">Hero</div><div class="t-body-s t2">28dp corners</div></div></div>`)}
+${blk("Spring system",`<p class="t-body-m t2" style="max-width:640px">Mass 1, displacement normalized 0 to 1. Spatial tokens (damping ratio below 1) overshoot slightly; effects tokens are critically damped and never overshoot. Springs answer a touch. Ambient motion (kill feed, live dot, sweep line) stays linear.</p><table class="spr"><thead><tr><th>Token</th><th>Stiffness</th><th>Damping ratio (c)</th><th>Settle</th></tr></thead><tbody>${Object.entries(TOK).map(([n,[zz,kk]])=>`<tr><td class="t-mono">m3-${n}</td><td class="t-mono">${kk}</td><td class="t-mono">${zz} (${(2*zz*Math.sqrt(kk)).toFixed(1)})</td><td class="t-mono">${Math.round(info[n].T*1000)} ms</td></tr>`).join("")}</tbody></table>`)}</div>`;
+
+/* flow reference: 22 static thumbnails plus labelled arrows */
+const SC=GDG.shell.SCREENS,CE=GDG.shell.cells,GR=["Public","Member","Core Team","Mentor","Shared"];
+const FW=140,FH=303,GX=84,PX=FW+GX,PY=FH+128,X0=250,Y0=96,W=X0+7*PX-GX+40,H=Y0+4*PY+FH+68;
+const at=(c,r)=>[X0+c*PX,Y0+r*PY],cnt=[0,0,0,0,0],ps=[];
+SC.forEach(([,,g])=>{const r=GR.indexOf(g);ps.push([cnt[r]+(r===4?4:0),r]);cnt[r]++});
+const R=(c,r)=>{const[a,b]=at(c,r);return[a+FW,b+FH/2]},Lf=(c,r)=>{const[a,b]=at(c,r);return[a,b+FH/2]},Bt=(c,r,d)=>{const[a,b]=at(c,r);return[a+d,b+FH]},Tp=(c,r,d)=>{const[a,b]=at(c,r);return[a+d,b]};
+const AR=[],add=(pts,kind,t,lx,ly,an="middle")=>AR.push({pts,kind,t,lx,ly,an});
+[["Tap Join","Send code","Verify"],["Events tab","View details","Projects tab","Open project","Learn tab","Profile tab"],["Events tab","Projects tab","Members tab","Me tab"],["Students tab","Insights tab"]].forEach((ls,r)=>ls.forEach((t,c)=>{const a=R(c,r),b=Lf(c+1,r);add([a,b],"",t,(a[0]+b[0])/2,a[1]-8)}));
+const rt=Bt(3,0,110),runY=rt[1]+56,busX=150;
+[[1,"Role: Member"],[2,"Role: Core Team"],[3,"Role: Mentor"]].forEach(([r,t])=>{const e=Lf(0,r);add([rt,[rt[0],runY],[busX,runY],[busX,e[1]],e],"b",t,(busX+e[0])/2,e[1]-8)});
+const[bx,by]=at(5,3),bT=by+FH/2-32,bB=bT+64,em=at(5,4)[1];
+const h1=Bt(0,1,118),y1=h1[1]+56,h2=Bt(0,2,118),y2=h2[1]+56,h3=Bt(0,3,118),y3=h3[1]+56;
+add([h1,[h1[0],y1],[bx+105,y1],[bx+105,bT]],"","View full Board",h1[0]+8,y1-8,"start");
+add([h2,[h2[0],y2],[bx+35,y2],[bx+35,bT]],"","View full Board",h2[0]+8,y2-8,"start");
+add([h3,[h3[0],y3],[bx+35,y3],[bx+35,bB]],"","View full Board",h3[0]+8,y3-8,"start");
+add([[bx+105,bB],[bx+105,em]],"","No points yet",bx+113,(bB+em)/2,"start");
+const gm=Tp(1,0,70),g4=Tp(4,1,70),g6=Tp(6,1,70);
+add([gm,[gm[0],40]],"g","Code by email",gm[0]+8,(gm[1]+40)/2,"start");
+add([g4,[g4[0],40]],"g","Open on GitHub",g4[0]+8,(g4[1]+40)/2,"start");
+add([g6,[g6[0],40]],"g","View on GitHub",g6[0]-8,(g6[1]+40)/2,"end");
+const pill=(l,w,ic,t)=>`<div class="m3-chip-assist" style="position:absolute;left:${l}px;top:0;width:${w}px;height:40px;justify-content:center">${I(ic)}${t}</div>`;
+const lg=(c,t)=>`<span class="row" style="gap:var(--sp-2)"><svg width="36" height="8" aria-hidden="true"><line x1="2" y1="4" x2="34" y2="4" class="ar ${c}"/></svg><span class="t-body-m">${t}</span></span>`;
+const SUF=[" · Projects"," · Board"," · Events"];
+$("#flows").innerHTML=`<div class="ds" style="padding-bottom:0"><h2 class="t-headline-m">Flow</h2><div class="row wrap" style="gap:var(--sp-6)">${lg("","In-app navigation")}${lg("b","Role routing")}${lg("g","External action")}</div></div>
+<div class="fl"><div class="fl-in" style="width:${W}px;height:${H}px">${GR.map((g,r)=>`<div class="fl-band" style="top:${Y0+r*PY-14}px;height:${FH+48}px"><div style="position:absolute;left:20px;top:16px"><div class="t-title-m">${g==="Shared"?"Shared states":g}</div><div class="t-label-m t2">${cnt[r]} screens</div></div></div>`).join("")}
+<svg class="map" width="${W}" height="${H}" aria-hidden="true"><defs>${[["ah","--on-surface-3"],["ah-b","--primary"],["ah-g","--brand-green"]].map(([id,c])=>`<marker id="${id}" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="10" markerHeight="10" markerUnits="userSpaceOnUse" orient="auto"><path d="M0 0L10 5L0 10z" style="fill:var(${c})"/></marker>`).join("")}</defs>${AR.map(a=>`<path class="ar ${a.kind}" d="M${a.pts.map(q=>q.join(" ")).join("L")}" marker-end="url(#ah${a.kind?"-"+a.kind:""})"/><text x="${a.lx}" y="${a.ly}" text-anchor="${a.an}">${a.t}</text>`).join("")}<text x="${busX+10}" y="${runY-8}">Role routing · 3 branches</text></svg>
+${pill(at(1,0)[0],FW,"mail","Gmail")}${pill(at(4,0)[0],3*PX-GX,"link","GitHub")}
+<div class="fn m3-card-outlined tint blue" style="left:${bx}px;top:${bT}px;height:64px;flex-direction:row;align-items:center;padding:0 var(--sp-3)">${I("emoji_events")}<div><div class="t-title-s">Board</div><div class="t-label-s">shared card</div></div></div>
+${SC.map(([,name],i)=>`<div class="fn" data-i="${i}" style="left:${at(...ps[i])[0]}px;top:${at(...ps[i])[1]}px"><div class="tn" inert aria-hidden="true"></div><div class="t-mono t2" style="margin-top:4px;white-space:nowrap">${String(i+1).padStart(2,"0")} ${name}${i>18?SUF[i-19]:""}</div></div>`).join("")}</div></div>`;
+document.addEventListener("DOMContentLoaded",()=>$("#flows").querySelectorAll(".fn[data-i]").forEach(n=>{const ph=CE[n.dataset.i].querySelector(".m3-phone").cloneNode(true);ph.classList.add("is-played");$(".tn",n).append(ph)}));
+
+/* opening animation: plays once per session, 300 ms fade under reduced motion */
+const o=$(".intro"),H0=document.documentElement;
+if(o){
+ if(!H0.classList.contains("intro-on"))o.remove();
+ else{
+  try{sessionStorage.setItem("gdgoc-intro-played","true")}catch(e){}
+  const S=n=>cs.getPropertyValue("--m3-"+n).trim()||"ease-out",A=(e,kf,t)=>e.animate(kf,{fill:"both",easing:"linear",...t}),q=c=>$(c,o);
+  const ct=[...document.querySelectorAll(".draft-callout,header,main")],L=q(".i-logo"),vw=innerWidth/2,vh=innerHeight/2;
+  const end=()=>{ct.forEach(e=>e.getAnimations().forEach(a=>a.cancel()));o.remove()};
+  o.classList.add("go");H0.classList.remove("intro-on");
+  if(RM.matches){A(L,[{opacity:1},{opacity:0}],{duration:300});ct.forEach(e=>A(e,[{opacity:0},{opacity:1}],{duration:300}));setTimeout(end,350)}
+  else{
+   A(q(".i-glow"),[{opacity:0},{opacity:1,offset:.18},{opacity:1,offset:.9},{opacity:0}],{duration:1100});
+   A(q(".i-scrim"),[{opacity:0},{opacity:0,offset:.36},{opacity:1,offset:.45},{opacity:1,offset:.9},{opacity:0}],{duration:1100});
+   A(L,[{opacity:0,transform:"scale(.9)"},{opacity:1,transform:"scale(1)"}],{duration:200});
+   A(q(".i-ln i"),[{transform:"scaleX(0)",opacity:1},{transform:"scaleX(1)",opacity:1,offset:.75},{transform:"scaleX(1)",opacity:0}],{delay:200,duration:400});
+   A(q(".i-tl"),[{transform:"none",opacity:1},{transform:`translate(${-vw}px,${-vh}px) rotate(-8deg)`,opacity:0}],{delay:500,duration:500,easing:S("spatial-slow")});
+   A(q(".i-br"),[{transform:"none",opacity:1},{transform:`translate(${vw}px,${vh}px) rotate(8deg)`,opacity:0}],{delay:500,duration:500,easing:S("spatial-slow")});
+   ct.forEach(e=>A(e,[{opacity:0,transform:"translateY(8px)"},{opacity:1,transform:"none"}],{delay:1000,duration:200,easing:S("effects-default")}));
+   setTimeout(end,1250)}}}
+})();
+</script>
+</body>
+</html>
