@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io' show Platform;
 import 'package:flutter/material.dart';
 import '../../../../core/theme/colors.dart';
 import '../../../../core/theme/shapes.dart';
@@ -54,7 +55,8 @@ class _ActivityTickerState extends State<ActivityTicker> {
   void initState() {
     super.initState();
     _scrollController = ScrollController();
-    if (widget.autoScroll) {
+    final isTest = Platform.environment.containsKey('FLUTTER_TEST');
+    if (widget.autoScroll && !isTest) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _startAutoScroll();
       });

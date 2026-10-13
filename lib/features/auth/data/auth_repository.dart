@@ -1,3 +1,4 @@
+import 'dart:io' show Platform;
 import '../domain/models/auth_user.dart';
 
 abstract interface class AuthRepository {
@@ -18,17 +19,27 @@ abstract interface class AuthRepository {
 }
 
 class FakeAuthRepository implements AuthRepository {
-  FakeAuthRepository({this.demoRole = UserRole.member});
+  FakeAuthRepository({
+    this.demoRole = UserRole.member,
+    bool? hasDelay,
+  }) : hasDelay = hasDelay ?? !Platform.environment.containsKey('FLUTTER_TEST');
 
   final UserRole demoRole;
+  final bool hasDelay;
   AuthUser? _currentUser;
+
+  Future<void> _maybeDelay(int milliseconds) async {
+    if (hasDelay) {
+      await Future.delayed(Duration(milliseconds: milliseconds));
+    }
+  }
 
   @override
   Future<void> sendOtp({
     required String rollNumber,
     required String email,
   }) async {
-    await Future.delayed(const Duration(milliseconds: 600));
+    await _maybeDelay(600);
     if (rollNumber.length != 13) {
       throw const FormatException('Roll number must be exactly 13 digits.');
     }
@@ -43,8 +54,7 @@ class FakeAuthRepository implements AuthRepository {
     required String email,
     required String otp,
   }) async {
-    // Simulate checking against PSIT records
-    await Future.delayed(const Duration(milliseconds: 1200));
+    await _maybeDelay(1200);
 
     if (otp != '123456' && otp.length != 6) {
       throw const FormatException('Invalid verification code.');

@@ -1,9 +1,14 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gdgoc_psit_app/main.dart';
 
 void main() {
   testWidgets('GdgApp launches landing screen successfully', (WidgetTester tester) async {
-    await tester.pumpWidget(const GdgApp());
+    await tester.pumpWidget(
+      const ProviderScope(
+        child: GdgApp(),
+      ),
+    );
     await tester.pump();
     await tester.pump(const Duration(milliseconds: 100));
 
