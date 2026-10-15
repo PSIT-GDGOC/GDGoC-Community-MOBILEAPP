@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:gdgoc_psit_app/features/auth/data/auth_repository.dart';
@@ -44,16 +45,17 @@ void main() {
 
       // Member Shell tabs
       expect(find.text('Home'), findsWidgets);
-      expect(find.text('Events'), findsOneWidget);
-      expect(find.text('Projects'), findsOneWidget);
+      expect(find.text('Events'), findsWidgets);
+      expect(find.text('Projects'), findsWidgets);
       expect(find.text('Learn'), findsOneWidget);
       expect(find.text('Profile'), findsOneWidget);
 
       // Verify active tab content is Home
-      expect(find.text('Home Portal'), findsOneWidget);
+      expect(find.text('Good morning, Aarav'), findsOneWidget);
+      expect(find.text('Your rank on the Board'), findsOneWidget);
 
       // Switch to Events tab
-      await tester.tap(find.text('Events'));
+      await tester.tap(find.byIcon(Icons.calendar_month_outlined));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 200));
 
