@@ -9,6 +9,7 @@ import '../../features/auth/presentation/screens/role_router_screen.dart';
 import '../../features/auth/presentation/screens/verify_screen.dart';
 import '../widgets/role_shell_scaffold.dart';
 import '../widgets/tab_placeholder_screen.dart';
+import '../../features/home/presentation/screens/home_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -104,11 +105,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/member/home',
-                builder: (context, state) => const TabPlaceholderScreen(
-                  title: 'Home',
-                  role: UserRole.member,
-                  issueNumber: 3,
-                ),
+                builder: (context, state) => const HomeScreen(),
               ),
             ],
           ),
