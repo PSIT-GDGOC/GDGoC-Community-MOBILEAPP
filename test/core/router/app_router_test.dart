@@ -22,6 +22,11 @@ void main() {
     });
 
     testWidgets('Authenticated Member is routed to Member Shell with 5 bottom tabs', (tester) async {
+      tester.view.physicalSize = const Size(800, 1400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.resetPhysicalSize);
+      addTearDown(tester.view.resetDevicePixelRatio);
+
       final container = ProviderContainer(
         overrides: [
           authRepositoryProvider.overrideWithValue(
@@ -59,7 +64,8 @@ void main() {
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 200));
 
-      expect(find.text('Events Portal'), findsOneWidget);
+      expect(find.text('1 of 6'), findsOneWidget);
+      expect(find.text('Hacktoberfest 2026 Kickoff'), findsOneWidget);
     });
 
     testWidgets('Authenticated Core Team is routed to Core Shell with 5 bottom tabs', (tester) async {
