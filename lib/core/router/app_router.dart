@@ -10,6 +10,9 @@ import '../../features/auth/presentation/screens/verify_screen.dart';
 import '../widgets/role_shell_scaffold.dart';
 import '../widgets/tab_placeholder_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
+import '../../features/events/domain/models/event_item.dart';
+import '../../features/events/presentation/screens/event_detail_screen.dart';
+import '../../features/events/presentation/screens/events_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -113,11 +116,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/member/events',
-                builder: (context, state) => const TabPlaceholderScreen(
-                  title: 'Events',
-                  role: UserRole.member,
-                  issueNumber: 4,
-                ),
+                builder: (context, state) => const EventsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) {
+                      final eventId = state.pathParameters['id'] ?? '';
+                      final extra = state.extra is EventItem
+                          ? state.extra as EventItem
+                          : null;
+                      return EventDetailScreen(
+                        eventId: eventId,
+                        initialEvent: extra,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),
