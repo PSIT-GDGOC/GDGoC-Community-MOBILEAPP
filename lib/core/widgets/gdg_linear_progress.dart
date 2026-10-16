@@ -29,19 +29,32 @@ class GdgLinearProgress extends StatelessWidget {
       ),
       clipBehavior: Clip.antiAlias,
       alignment: Alignment.centerLeft,
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          return AnimatedContainer(
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOut,
-            width: constraints.maxWidth * clamped,
-            height: height,
-            decoration: BoxDecoration(
-              color: color ?? colors.brandBlue,
-              borderRadius: GdgShapes.full,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0.0,
+              child: LinearProgressIndicator(
+                value: clamped,
+                backgroundColor: Colors.transparent,
+              ),
             ),
-          );
-        },
+          ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              return AnimatedContainer(
+                duration: const Duration(milliseconds: 300),
+                curve: Curves.easeOut,
+                width: constraints.maxWidth * clamped,
+                height: height,
+                decoration: BoxDecoration(
+                  color: color ?? colors.brandBlue,
+                  borderRadius: GdgShapes.full,
+                ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }

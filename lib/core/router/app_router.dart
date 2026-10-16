@@ -9,6 +9,8 @@ import '../../features/auth/presentation/screens/role_router_screen.dart';
 import '../../features/auth/presentation/screens/verify_screen.dart';
 import '../widgets/role_shell_scaffold.dart';
 import '../widgets/tab_placeholder_screen.dart';
+import '../../features/learn/presentation/screens/learn_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/events/domain/models/event_item.dart';
 import '../../features/events/presentation/screens/event_detail_screen.dart';
@@ -20,10 +22,13 @@ final appRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: _AuthRouterNotifier(ref),
     redirect: (context, state) {
       final authState = ref.read(authControllerProvider);
-      final isAuthenticated = authState.status == AuthStatus.authenticated && authState.user != null;
+      final isAuthenticated =
+          authState.status == AuthStatus.authenticated &&
+          authState.user != null;
       final path = state.uri.path;
 
-      final isAuthFlow = path == '/landing' ||
+      final isAuthFlow =
+          path == '/landing' ||
           path == '/verify' ||
           path == '/otp' ||
           path == '/role-router';
@@ -43,7 +48,10 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       };
 
       // Redirect out of landing/auth pages once authenticated (unless explicitly viewing role-router)
-      if (path == '/' || path == '/landing' || path == '/verify' || path == '/otp') {
+      if (path == '/' ||
+          path == '/landing' ||
+          path == '/verify' ||
+          path == '/otp') {
         return defaultHome;
       }
 
@@ -64,9 +72,8 @@ final appRouterProvider = Provider<GoRouter>((ref) {
       // Public / Auth Flow
       GoRoute(
         path: '/landing',
-        builder: (context, state) => LandingScreen(
-          onJoinPressed: () => context.go('/verify'),
-        ),
+        builder: (context, state) =>
+            LandingScreen(onJoinPressed: () => context.go('/verify')),
       ),
       GoRoute(
         path: '/verify',
@@ -151,11 +158,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/member/learn',
-                builder: (context, state) => const TabPlaceholderScreen(
-                  title: 'Learn',
-                  role: UserRole.member,
-                  issueNumber: 6,
-                ),
+                builder: (context, state) => const LearnScreen(),
               ),
             ],
           ),
@@ -163,11 +166,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/member/profile',
-                builder: (context, state) => const TabPlaceholderScreen(
-                  title: 'Profile',
-                  role: UserRole.member,
-                  issueNumber: 6,
-                ),
+                builder: (context, state) => const ProfileScreen(),
               ),
             ],
           ),
