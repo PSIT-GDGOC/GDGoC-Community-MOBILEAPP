@@ -15,6 +15,8 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/events/domain/models/event_item.dart';
 import '../../features/events/presentation/screens/event_detail_screen.dart';
 import '../../features/events/presentation/screens/events_screen.dart';
+import '../../features/core_team/presentation/screens/core_dashboard_screen.dart';
+import '../../features/core_team/presentation/screens/manage_events_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -184,11 +186,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/core/dashboard',
-                builder: (context, state) => const TabPlaceholderScreen(
-                  title: 'Dashboard',
-                  role: UserRole.coreTeam,
-                  issueNumber: 7,
-                ),
+                builder: (context, state) => const CoreDashboardScreen(),
               ),
             ],
           ),
@@ -196,11 +194,7 @@ final appRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: '/core/events',
-                builder: (context, state) => const TabPlaceholderScreen(
-                  title: 'Manage Events',
-                  role: UserRole.coreTeam,
-                  issueNumber: 7,
-                ),
+                builder: (context, state) => const ManageEventsScreen(),
               ),
             ],
           ),

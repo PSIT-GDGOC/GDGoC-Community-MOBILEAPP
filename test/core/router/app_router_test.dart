@@ -92,11 +92,22 @@ void main() {
 
       // Core Team Shell tabs
       expect(find.text('Dashboard'), findsWidgets);
-      expect(find.text('Events'), findsOneWidget);
-      expect(find.text('Projects'), findsOneWidget);
+      expect(find.text('Events'), findsWidgets);
+      expect(find.text('Projects'), findsWidgets);
       expect(find.text('Members'), findsOneWidget);
       expect(find.text('Me'), findsOneWidget);
-      expect(find.text('Dashboard Portal'), findsOneWidget);
+
+      // Verify active tab content is CoreDashboardScreen
+      expect(find.text('Needs your attention'), findsOneWidget);
+      expect(find.text('Upcoming events'), findsOneWidget);
+
+      // Switch to Events tab (ManageEventsScreen)
+      await tester.tap(find.byIcon(Icons.calendar_month_outlined));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 200));
+
+      expect(find.text('Upcoming'), findsOneWidget);
+      expect(find.text('Past'), findsOneWidget);
     });
 
     testWidgets('Authenticated Mentor is routed to Mentor Shell with 4 bottom tabs', (tester) async {
