@@ -15,8 +15,10 @@ import '../../features/home/presentation/screens/home_screen.dart';
 import '../../features/events/domain/models/event_item.dart';
 import '../../features/events/presentation/screens/event_detail_screen.dart';
 import '../../features/events/presentation/screens/events_screen.dart';
+import '../../features/core_team/domain/models/manage_event_item.dart';
 import '../../features/core_team/presentation/screens/core_dashboard_screen.dart';
 import '../../features/core_team/presentation/screens/manage_events_screen.dart';
+import '../../features/scanner/presentation/screens/attendance_scanner_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -195,6 +197,22 @@ final appRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: '/core/events',
                 builder: (context, state) => const ManageEventsScreen(),
+                routes: [
+                  GoRoute(
+                    path: ':id/scan',
+                    builder: (context, state) {
+                      final eventId =
+                          state.pathParameters['id'] ?? 'evt_kickoff';
+                      final event = state.extra is ManageEventItem
+                          ? state.extra as ManageEventItem
+                          : null;
+                      return AttendanceScannerScreen(
+                        eventId: eventId,
+                        initialEvent: event,
+                      );
+                    },
+                  ),
+                ],
               ),
             ],
           ),

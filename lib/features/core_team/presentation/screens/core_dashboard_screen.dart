@@ -182,7 +182,7 @@ class CoreDashboardScreen extends ConsumerWidget {
                 trailing: const Icon(Icons.chevron_right_rounded),
                 onTap: () {
                   Navigator.of(sheetContext).pop();
-                  context.go('/core/events');
+                  context.push('/core/events/evt_kickoff/scan');
                 },
               ),
             ],
